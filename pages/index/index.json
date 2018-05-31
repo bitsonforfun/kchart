@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "ThetA",
+  "usingComponents": {
+    "ec-canvas": "../../utils/ec-canvas/ec-canvas",
+    "zan-card": "../../utils/dist/card/index",
+    "zan-panel": "../../utils/dist/panel/index",
+    "zan-tab": "../../utils/dist/tab/index"
+  }
+}

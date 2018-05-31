@@ -1,0 +1,26 @@
+<view>
+  <zan-tab
+    list="{{ tab.list }}"
+    selected-id="{{ tab.selectedId }}"/>
+  <view style='margin-top:0px'></view>
+  <block wx:for="{{currencies}}" wx:for-item="currency" wx:key="{{currency.id}}">
+    <view bindtap="open" data-currency="{{currency}}">
+      <zan-panel without-border>
+        <zan-card
+          isPercentChangePositive="{{ currency.isPercentChangePositive }}
+          card-class="test-card zan-card__thumb2"
+          thumb="{{ coin_img_url }}/{{ currency.symbol }}.png"
+          price="${{ currency.quotesUSDPrice }}"
+          title="{{ currency.name }} ({{ currency.symbol }})"
+          rank="{{ currency.quotesUSDPercentChange24h }}"
+          desc="市值 #{{ currency.rank }} ${{ currency.quotesUSDMarketCap }}"
+          status="">
+        </zan-card>
+      </zan-panel>
+    </view>
+  </block>
+</view>
+
+<!-- <doc-page title="Coin List" without-padding>
+  
+</doc-page> -->

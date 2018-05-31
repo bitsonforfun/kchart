@@ -1,0 +1,6 @@
+  <view style='padding-top:30rpx;height:280px'>
+      <view class="container">
+        <ec-canvas id="chart-candle" style="width:100%;height:300px;position:absolute;" canvas-id="mychart-line" ec="{{ ec }}"></ec-canvas>
+      </view>
+  </view>
+

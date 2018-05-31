@@ -1,0 +1,37 @@
+<zan-panel class="panel-example">
+  <view style="padding-top:30rpx;padding-left:30rpx;padding-bottom:0;font-size:70rpx">$ {{ currencyInfo.quotesUSDPrice }}</view>
+  <view style="padding-top:4rpx;padding-left:30rpx;padding-bottom:0rpx;font-size:32rpx;color:{{ changePercentColor }}">{{ currencyInfo.quotesUSDPercentChange24h }}% (24h)</view>
+  <view style="padding-top:4rpx;padding-left:30rpx;padding-bottom:6rpx;font-size:26rpx;color:#A0A0A0">volume(24h) {{ currencyInfo.quotesUSDVolume24h }} USD</view>
+</zan-panel>
+ 
+<!-- wx chart -->
+<view class="container3" style=''>
+    <canvas canvas-id="areaCanvas" class="canvas" bindtouchstart="touchHandler"></canvas>
+</view>
+
+<!-- <view style='padding-top:30rpx;margin-left:0rpx;margin-right:0rpx;height:140px'>
+    <view class="container">
+      <ec-canvas id="chart-line-{{ currencyInfo.id }}" style="width:100%;height:140px;position:absolute;" canvas-id="mychart-line" ec="{{ ec }}" ></ec-canvas>
+    </view>
+</view> -->
+
+<block wx:if="{{coinpairs}}">
+  <zan-panel class="cell-panel-demo" title="COIN PAIR">
+    <zan-cell-group>
+      <block wx:for="{{coinpairs}}" wx:for-item="pair" wx:key="cell-{{pair.symbol}}">
+        <zan-cell bindtap="open" data-pair="{{ pair }}" title="{{ pair.ex }}, {{ pair.symbol }}" value="{{ }}" is-link></zan-cell>
+      </block>
+    </zan-cell-group>
+  </zan-panel>
+</block>
+
+
+<zan-panel title="STATS" class="panel-example">
+  <zan-cell-group>
+    <zan-cell title="Rank" label="" value="{{ currencyInfo.rank }}"></zan-cell>
+    <zan-cell title="Market Cap" label="" value="{{ currencyInfo.quotesUSDMarketCap }}"></zan-cell>
+    <zan-cell title="Circulating Supply" label="" value="{{ currencyInfo.circulatingSupply }}"></zan-cell>
+    <zan-cell title="Total Supply" label="" value="{{ currencyInfo.totalSupply }}"></zan-cell>
+    <zan-cell title="Max Supply" label="" value="{{ currencyInfo.maxSupply }}"></zan-cell>
+  </zan-cell-group>
+</zan-panel>

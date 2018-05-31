@@ -1,0 +1,50 @@
+<view class="zan-card card-class">
+  <!-- 左侧图片 -->
+  
+
+  <!-- 右侧详情 -->
+  <view class="zan-card__detail">
+    <slot wx:if="{{ useDetailSlot }}" name="detail-slot"></slot>
+    <block wx:else>
+      <view class="zan-card__detail-row">
+        <view class="zan-card__right-col">{{ price }}</view>
+
+        <view style='position:relative'>
+          <view class="zan-card__thumb" style='float:left'>
+            <image class="zan-card__img"
+              src="{{ thumb }}"
+              mode="aspectFit"
+            ></image>
+          </view>
+          <text style='position:relative;float:left;margin-left:5px'>{{ title }}</text>
+        </view>
+        <!-- <view class="zan-card__left-col zan-ellipsis--l2">
+          {{ title }}
+        </view> -->
+      </view>
+
+      <view class="zan-card__detail-row" style='margin-bottom:0px'>
+        <view wx:if="{{ rank && (isPercentChangePositive == true)}}" class="zan-card__right-col" style='color:#DC143C'> +{{ rank }}%</view>
+        <view wx:if="{{ rank && (isPercentChangePositive == false)}}" class="zan-card__right-col" style='color:#259D22'> {{ rank }}%</view>
+        <view wx:if="{{ desc }}" class="zan-card__left-col zan-c-gray-darker" style='font-size:12px;margin-left:1px'>
+          {{ desc }}
+        </view>
+
+        <!-- <view wx:if="{{ rank }}" class="zan-card__right-col"> {{ rank }}</view>
+        <view wx:if="{{ desc && (isPercentChangePositive == true) }}" name="zan-card__left-col" style='color:#259D22'>
+          {{ desc }}
+        </view>
+        <view wx:if="{{ desc && (isPercentChangePositive == false) }}" name="zan-card__left-col" style='color:#DC143C'>
+          {{ desc }}
+        </view>  -->
+        <!-- <view wx:if="{{ desc }}" class="zan-card__left-col">
+          {{ desc }}
+        </view> -->
+      </view>
+
+      <view wx:if="{{ status }}" class="zan-card__detail-row">
+        <view class="zan-card__left-col zan-c-red">{{ status }}</view>
+      </view>
+    </block>
+  </view>
+</view>

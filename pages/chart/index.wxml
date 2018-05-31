@@ -1,0 +1,71 @@
+<view class="container2">
+  <view class="tab">
+    <block wx:for="{{tabSlices}}" wx:for-item="slice" wx:key="{{slice}}">
+      <text class="{{tabName == slice ? 'current': ''}}" data-type="{{ slice }}" bindtap="tabChart">{{ sliceNames[slice] }}</text>
+    </block>
+    <block wx:if="{{selectSlices}}">
+      <picker mode="selector" value="{{selectIndex}}" range="{{selectSlices}}" class="{{tabName == 'selectK' ? 'current': ''}}" data-type="selectK" bindchange="tabMinChart">
+        <view class="picker">
+          {{selectSlices[selectIndex]}}
+          <view class="dropDownIcon"></view>
+        </view>
+      </picker>
+    </block>
+  </view>
+  <view class="content tab-content" style='padding-top:5px'>
+    <view class="hdata1">
+      <view class="numOne ">
+        <view class="n_t bf16" style="color:{{cColor}};">{{c}}</view>
+        <view class="n_b">
+          <!-- <text class="pr1" style="color:{{cColor}};">{{}}</text> -->
+          <text style="color:{{cColor}};">{{f}}%</text>
+        </view>
+      </view>
+      <view class="numTwo ">
+        <view class="n_ts">高
+          <text class="fr" style="color:{{color_h}};">{{h}}</text>
+        </view>
+        <view class="n_ts">低
+          <text class="fr" style="color:{{color_low}};">{{l}}</text>
+        </view>
+      </view>
+      <view class="numTwo ">
+        <view class="n_ts">开
+          <text class="fr" style="color:{{color_op}};">{{s}}</text>
+        </view>
+        <view class="n_ts">昨
+          <text class="fr">{{y}}</text>
+        </view>
+      </view>
+      <view class="numTwo ">
+        <view class="ml">量
+          <text class="fr">{{v}}</text>
+        </view>
+        <view class="ml">额
+          <text class="fr">{{e}}</text>
+        </view>
+      </view>
+    </view>
+    <view style='margin-left:3px;margin-top:1px'>
+      <text class="" style='font-size:9px'>{{ date?date:'---' }}</text>
+    </view>
+    <view class="canvas-wrap">
+      <view class="kline-average">
+        <text class="ma5">MA5:{{ma5}}</text>
+        <text class="ma10">MA10:{{ma10}}</text>
+        <text class="ma20">MA20:{{ma20}}</text>
+      </view>
+      <canvas canvas-id="k-line" class="stage" style="width: 100%; height: 250px;">
+      </canvas>
+      <view class="kline-average">
+        <text class="ma5">MA5:{{ma5b}}</text>
+        <text class="ma10">MA10:{{ma10b}}</text>
+        <text class="ma20">MA20:{{ma20b}}</text>
+      </view>
+      <canvas canvas-id="k-line-b" class="stage" style="width: 100%; height: 80px;">
+      </canvas>
+      <canvas canvas-id="kline-axis" class="stage axis-stage" style="width: 100%; height: 350px" bindtap="axisStart" bindtouchmove="axisMove" bindtouchend="axisStop">
+      </canvas>
+    </view>
+  </view>
+</view>
