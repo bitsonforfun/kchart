@@ -1,9 +1,0 @@
-{
-  "navigationBarTitleText": "",
-  "usingComponents": {
-    "ec-canvas": "../../utils/ec-canvas/ec-canvas",
-    "zan-panel": "../../utils/dist/panel/index",
-    "zan-cell": "../../utils/dist/cell/index",
-    "zan-cell-group": "../../utils/dist/cell-group/index"
-  }
-}

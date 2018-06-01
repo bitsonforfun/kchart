@@ -107,7 +107,9 @@ Page({
       '1h': '1小时',
       '6h': '6小时',
       '1d': '1天'
-    }
+    },
+    xStart: 0,
+    xEnd: 0
   },
   onLoad: function (options) {
     // 从上一个页面传进参数
@@ -367,9 +369,10 @@ Page({
   // axisStart: function (e) {
   //   var x = e.touches[0].x;
   //   var y = e.touches[0].y;
+  //   // var x = e.detail.x;
+  //   // var y = e.detail.y;
   //   this.data.isShowAxis = true;
   //   kAxisShow.start(x, y);
-
   //   this.setPrice(x);
   // },
   // axisMove: function (e) {
@@ -380,25 +383,44 @@ Page({
   //     this.setPrice(x);
   //   }
   // },
+  // axisStop: function () {
+  //   // this.data.isShowAxis = false;
+  //   // kAxisShow.stop();
+  // },
   axisStart: function (e) {
     var x = e.touches[0].x;
     var y = e.touches[0].y;
-    // var x = e.detail.x;
-    // var y = e.detail.y;
     this.data.isShowAxis = true;
     kAxisShow.start(x, y);
     this.setPrice(x);
   },
+  moveStart: function (e) {
+    var x = e.touches[0].x;
+    var y = e.touches[0].y;
+    kAxisShow.stop();
+    this.data.isShowAxis = false;
+    this.data.xStart = x
+  },
   axisMove: function (e) {
+    var x = e.touches[0].x;
+    var y = e.touches[0].y;
     if (this.data.isShowAxis) {
-      var x = e.touches[0].x;
-      var y = e.touches[0].y;
       kAxisShow.move(x, y);
       this.setPrice(x);
+    } else {
+      this.data.xEnd = x
     }
   },
   axisStop: function () {
-    // this.data.isShowAxis = false;
+    if (this.data.isShowAxis) {
+      this.data.isShowAxis = false;
+    } else {
+      var length = this.data.xEnd - this.data.xStart;
+      kLine.tapMove1(length);
+      kLineB.tapMove2(length);
+      kLine.draw();
+      kLineB.draw();
+    }
     // kAxisShow.stop();
   }
 });

@@ -31,6 +31,7 @@ module.exports = function (canvasId) {
     endTime: '',
     txtColor: 'white',
     axisObj: null,
+    cursor: null,
     init: function (options) {
       this.ctx = wx.createCanvasContext(this.canvasId);
       this.initConfig(options);
@@ -82,6 +83,244 @@ module.exports = function (canvasId) {
         index: index
       }
     },
+    // bitsonbitson
+    tapMove1: function (length) {
+      //////////////////////////
+      // k 线部分
+      //////////////////////////
+      var dataStore = this.options;
+      var yMax = this.yMax = 0;
+      var yMin = this.yMin = 1000000;
+
+      dataStore.yAxis = []
+      var xAxis = dataStore.xAxis;
+      var yAxis = dataStore.yAxis;
+      var originData = dataStore.originData;
+      var canvasWidth = this.canvasWidth;
+      var paddingLeft = this.paddingLeft;
+      var paddingRight = this.paddingRight;
+      var unit = this.unit;
+      var average = dataStore.average;
+      var averageColors = this.averageColors;
+      var historyStep = Math.max.apply(null, average) || 0;
+      var odl = originData.length;
+
+      // moveUnit 可以是正数或负数，正数是向左移动，负数是向右移动
+      var moveUnit = Math.ceil(length / (canvasWidth - paddingLeft - paddingRight) * unit);
+      var cursor = this.cursor;
+
+      cursor = cursor - moveUnit
+      // 如果数据不足以支持移动的幅度，则只移动显示剩下的数据
+      if (cursor - unit - historyStep < 0) {
+        cursor = unit + historyStep
+      } else if (cursor > originData.length) {
+        cursor = originData.length
+      }
+      this.cursor = cursor
+
+      var data = originData.slice(cursor - unit, cursor);
+      var historyData = originData.slice(0, cursor - unit);
+      if (cursor - unit > historyStep) {
+        historyData = historyData.slice(historyData.length - historyStep)
+      }
+      var totalData = historyData.concat(data);
+      
+      yAxis.push({  //创建蜡烛趋势
+        type: 'candle',
+        gap: 0,
+        showLabel: true,
+        data_h: [],  //最高
+        data_l: [],  //最低
+        data_s: [],  //开盘
+        data_c: [],  //收盘（现价）
+
+        //bitson
+        data_v: [],
+        data_e: [],
+        data_f: [],
+
+        yin_yang: [] //阴阳: true为阳，false为阴
+      });
+
+      average.forEach(function (val, index) {
+        // dataStore.xAxis.averageLabel.push('MA' + val + ':');
+        yAxis.push({  //创建均线趋势
+          name: 'MA' + val,
+          type: 'line',
+          lineColor: averageColors[index],
+          data: [],
+          dataShow: [],
+          val: val,
+          isNew: dataStore.isNew,
+          odl: odl,
+          hide: odl < val
+        });
+      });
+
+      totalData.forEach(function (item, index) {
+        var d = item.split(',');
+        var t = d[0]; //时间
+        var s = d[1] / 1; //开盘价
+        var c = d[2] / 1; //现价
+        var h = d[3] / 1; //最高价
+        var l = d[4] / 1; //最低价
+
+        // bitson
+        var v = d[5] / 1; //量
+        var e = d[6] / 1; //额
+        var f = d[7];   //振幅
+
+        if (index >= historyStep) { //从历史数据之后开始计算画图所需数据
+          var dataIndex = index - historyStep;
+          var candleOpt = yAxis[0];
+          yMin = Math.min(l == 0 ? yMin : l, yMin);
+          xAxis.data[dataIndex] = t;
+          candleOpt['data_h'].push(h);
+          candleOpt['data_l'].push(l);
+          candleOpt['data_s'].push(s);
+          candleOpt['data_c'].push(c);
+
+          //bitson
+          candleOpt['data_v'].push(v);
+          candleOpt['data_e'].push(e);
+          candleOpt['data_f'].push(f);
+
+          candleOpt['yin_yang'].push(c >= s);
+          yMax = Math.max(h, yMax);
+          average.forEach(function (val, i) { //计算均线数据
+            var dataValue = dealAverage(val, index, totalData, 2, odl); //收盘（现）价均值
+            yAxis[i + 1].data.push(dataValue);
+            yAxis[i + 1].dataShow.push(common.metaUnit(dataValue));
+          });
+        }
+      });
+
+      dataStore.axis.yMax = this.yMax = yMax;
+      dataStore.axis.yMin = this.yMin = yMin;
+      dataStore.unit = this.unit;
+      dataStore.canvasWidth = this.canvasWidth;
+      dataStore.canvasHeight = this.canvasHeight;
+      this.setOptions(dataStore);
+    },
+    tapMove2: function (length) {
+      //////////////////////////
+      // 成交量部分
+      //////////////////////////
+      var dataStore = this.options;
+      var startTime = this.startTime;
+      var endTime = this.endTime;
+      var yMax = this.yMax = 0;
+      var yMin = this.yMin = 1000000;
+      var baseV = dataStore.origin.info.v;
+
+      dataStore.yAxis = []
+      var xAxis = dataStore.xAxis;
+      var yAxis = dataStore.yAxis;
+      var originData = dataStore.originData;
+      var canvasWidth = this.canvasWidth;
+      var paddingLeft = this.paddingLeft;
+      var paddingRight = this.paddingRight;
+      var unit = this.unit;
+      var average = dataStore.average;
+      var averageColors = this.averageColors;
+      var historyStep = Math.max.apply(null, average) || 0;
+      var odl = originData.length;
+
+      // moveUnit 可以是正数或负数，正数是向左移动，负数是向右移动
+      var moveUnit = Math.ceil(length / (canvasWidth - paddingLeft - paddingRight) * unit);
+      var cursor = this.cursor;
+
+      cursor = cursor - moveUnit
+      // 如果数据不足以支持移动的幅度，则只移动显示剩下的数据
+      if (cursor - unit - historyStep < 0) {
+        cursor = unit + historyStep
+      } else if (cursor > originData.length) {
+        cursor = originData.length
+      }
+      this.cursor = cursor
+      
+      var data = originData.slice(cursor - unit, cursor);
+      var historyData = originData.slice(0, cursor - unit);
+      if (cursor - unit > historyStep) {
+        historyData = historyData.slice(historyData.length - historyStep)
+      }
+      var totalData = historyData.concat(data);
+
+      yAxis.push({  //创建成交量图
+        type: 'bar',
+        color: [],
+        data: [],
+        cData: [],
+        gap: 1,
+        isBottomBar: true,
+        showMax: true
+      });
+      /*if(odl < 20){
+          average.pop();
+      }
+      if(odl < 10){
+          average.pop();
+      }
+      if(odl < 5){
+          average.pop();
+      }*/
+      average.forEach(function (val, index) {
+        dataStore.xAxis.averageLabel.push('MA' + val + ':');
+        yAxis.push({  //创建均线趋势
+          name: 'MA' + val,
+          type: 'line',
+          lineColor: averageColors[index],
+          data: [],
+          dataShow: [],
+          hide: odl < val
+        });
+      });
+      
+      var barOpt = yAxis[0];
+      totalData.forEach(function (item, index) {
+        var d = item.split(',');
+        var t = d[0]; //时间
+        var v = d[5] / 1; //成交量
+        var c = d[2] / 1; //现价
+        yMax = Math.max(v, yMax);
+        yMin = Math.min(v, yMin);
+        if (index >= historyStep) { //从历史数据之后开始计算画图所需数据
+          var dataIndex = index - historyStep;
+          xAxis.data[dataIndex] = t;
+          if (dataIndex === 0) {
+            startTime = t.split('-').join('');
+          }
+          if (dataIndex + 1 === totalData.length - historyStep) {
+            endTime = t.split('-').join('');
+          }
+          barOpt.data[dataIndex] = v;
+          barOpt.cData[dataIndex] = c;
+          average.forEach(function (val, i) { //计算均线数据
+            var dataValue = dealAverage(val, index, totalData, 5, odl); //成交量均值
+            yAxis[i + 1].data.push(dataValue);
+            yAxis[i + 1].dataShow.push(common.metaUnit(dataValue));
+          });
+        }
+      });
+
+      barOpt.data.forEach(function (item, index) {
+        //barOpt.color[index] = '#E6DB74';
+        //console.log(barOpt.cData[index], barOpt.cData[index - 1], barOpt.cData[index] - barOpt.cData[index - 1]);
+        barOpt.color[index] = barOpt.cData[index] - (index === 0 ? baseV : barOpt.cData[index - 1]) < 0 ? '#4cda64' : '#ff2f2f';
+      });
+
+      dataStore.axis.yMax = this.yMax = yMax;
+      dataStore.axis.yMin = this.yMin = 0;
+      dataStore.metaUnit = true;
+      if (odl < 60) {
+        startTime = origin.data[0].split(',')[0];
+        startTime = startTime.split('-').join('');
+      }
+      this.startTime = startTime;
+      this.endTime = endTime;
+      xAxis.times = [startTime, endTime];
+      this.setOptions(dataStore);
+    },
     metaData1: function (origin, options) {
       var dataStore = options;
       var yMax = this.yMax = 0;
@@ -93,6 +332,9 @@ module.exports = function (canvasId) {
       var historyStep = Math.max.apply(null, average) || 0;
       var originData = origin.data.slice(0);
       var odl = origin.data.length;
+
+      //存下原始数据，待之后使用
+      dataStore.originData = originData
 
       //处理小于 unit 条数据的情况
       dataStore.isNew = this.isNew;
@@ -112,6 +354,10 @@ module.exports = function (canvasId) {
       var historyData = originData.slice(0, originData.length - this.unit);  //计算均线所需历史数据
       historyData = historyData.slice(historyData.length - historyStep);
       var totalData = historyData.concat(data);
+
+      // bitson 记录cursor位置，即显示数据的最右端在数据集中的偏移量
+      this.cursor = originData.length
+
       yAxis.push({  //创建蜡烛趋势
         type: 'candle',
         gap: 0,
@@ -212,6 +458,10 @@ module.exports = function (canvasId) {
       var originData = origin.data.slice(0);
       var odl = origin.data.length;
 
+      //存下原始数据，待之后使用
+      dataStore.originData = originData
+      dataStore.origin = origin
+
       //处理小于 unit 条数据的情况
       dataStore.isNew = this.isNew;
       dataStore.offsetX = this.offsetX;
@@ -230,6 +480,10 @@ module.exports = function (canvasId) {
       var historyData = originData.slice(0, originData.length - this.unit);  //计算均线所需历史数据
       historyData = historyData.slice(historyData.length - historyStep);
       var totalData = historyData.concat(data);
+
+      // bitson 记录cursor位置，即显示数据的最右端在数据集中的偏移量
+      this.cursor = originData.length
+
       yAxis.push({  //创建成交量图
         type: 'bar',
         color: [],
