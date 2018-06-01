@@ -4,7 +4,6 @@
 var Api = require('../../utils/api.js');
 
 var app = getApp();
-var storage = require('../../utils/storage');
 var kl = require('../../utils/wxChart/k-line');
 var axisShow = require('../../utils/wxChart/axis-show');
 var kAxisShow
@@ -157,6 +156,7 @@ Page({
     var type = e.target.dataset.type;
     var api_url = Api.price_url + '?ex=' + this.data.ex + '&symbol=' + this.data.symbol + '&slice=' + type;
     this.data.tabName = type;
+    // clear axis show
 
     Api.fetchGet(api_url, (err, res) => {
       this.data.data = {
@@ -197,6 +197,7 @@ Page({
       minY: 0
     });
     kAxisShow.init();
+    kAxisShow.stop();
   },
   tabMinChart: function (e) {
     // var type = 'd';
@@ -249,6 +250,7 @@ Page({
       minY: 0
     });
     kAxisShow.init();
+    kAxisShow.stop();
   },
   draw: function (data, type) {
     kLine = kl('k-line').init(getOptionKline1(type));
@@ -357,7 +359,7 @@ Page({
       y: this.autoRoundNumPrecision(p.y), // 昨收
       v: v, // 量
       e: p.e? p.e:'-', // 额
-      f: p.f, // 震幅
+      f: parseFloat((p.f * 100).toFixed(4)), // 震幅 取4位小数
       ze: '-', // 震额
       cColor: cColor
     });
@@ -379,8 +381,10 @@ Page({
   //   }
   // },
   axisStart: function (e) {
-    var x = e.detail.x;
-    var y = e.detail.y;
+    var x = e.touches[0].x;
+    var y = e.touches[0].y;
+    // var x = e.detail.x;
+    // var y = e.detail.y;
     this.data.isShowAxis = true;
     kAxisShow.start(x, y);
     this.setPrice(x);
@@ -394,7 +398,7 @@ Page({
     }
   },
   axisStop: function () {
-    this.data.isShowAxis = true;
-    kAxisShow.stop();
+    // this.data.isShowAxis = false;
+    // kAxisShow.stop();
   }
 });

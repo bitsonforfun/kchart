@@ -64,7 +64,7 @@
       </view>
       <canvas canvas-id="k-line-b" class="stage" style="width: 100%; height: 80px;">
       </canvas>
-      <canvas canvas-id="kline-axis" class="stage axis-stage" style="width: 100%; height: 350px" bindtap="axisStart" bindtouchmove="axisMove" bindtouchend="axisStop">
+      <canvas canvas-id="kline-axis" class="stage axis-stage" style="width: 100%; height: 350px" bindtouchstart="axisStart" bindtouchmove="axisMove" bindtouchend="axisStop">
       </canvas>
     </view>
   </view>
