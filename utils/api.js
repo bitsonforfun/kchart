@@ -7,7 +7,6 @@
 var host = 'theta.meinvjpg.com'
 var base_url = 'https://' + host + '/api/1'
 var img_url = 'https://' + host + '/static/img'
-
 // var base_url = 'http://' + host + '/api/1'
 // var img_url = 'http://' + host + '/static/img'
 var coin_img_url = img_url + '/coin'

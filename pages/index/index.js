@@ -1,5 +1,3 @@
-import * as echarts from '../../utils/ec-canvas/echarts';
-
 var Api = require('../../utils/api.js');
 const app = getApp();
 

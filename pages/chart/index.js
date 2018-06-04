@@ -387,6 +387,43 @@ Page({
   //   // this.data.isShowAxis = false;
   //   // kAxisShow.stop();
   // },
+
+  // axisStart: function (e) {
+  //   var x = e.touches[0].x;
+  //   var y = e.touches[0].y;
+  //   this.data.isShowAxis = true;
+  //   kAxisShow.start(x, y);
+  //   this.setPrice(x);
+  // },
+  // moveStart: function (e) {
+  //   var x = e.touches[0].x;
+  //   var y = e.touches[0].y;
+  //   kAxisShow.stop();
+  //   this.data.isShowAxis = false;
+  //   this.data.xStart = x
+  // },
+  // axisMove: function (e) {
+  //   var x = e.touches[0].x;
+  //   var y = e.touches[0].y;
+  //   if (this.data.isShowAxis) {
+  //     kAxisShow.move(x, y);
+  //     this.setPrice(x);
+  //   } else {
+  //     this.data.xEnd = x
+  //   }
+  // },
+  // axisStop: function () {
+  //   if (this.data.isShowAxis) {
+  //     this.data.isShowAxis = false;
+  //   } else {
+  //     var length = this.data.xEnd - this.data.xStart;
+  //     kLine.tapMove1(length);
+  //     kLineB.tapMove2(length);
+  //     kLine.draw();
+  //     kLineB.draw();
+  //   }
+  // }
+
   axisStart: function (e) {
     var x = e.touches[0].x;
     var y = e.touches[0].y;
@@ -408,19 +445,30 @@ Page({
       kAxisShow.move(x, y);
       this.setPrice(x);
     } else {
-      this.data.xEnd = x
+      if (!this.data.isXSet) {
+        this.data.isXSet = true;
+        this.data.xStart = x
+      } else {
+        if (Math.abs(x - this.data.xStart) > 10) {
+          var length = x - this.data.xStart;
+          kLine.tapMove1(length);
+          kLineB.tapMove2(length);
+          kLine.draw();
+          kLineB.draw();
+          this.data.isXSet = false;
+        }
+      }
     }
   },
   axisStop: function () {
     if (this.data.isShowAxis) {
       this.data.isShowAxis = false;
     } else {
-      var length = this.data.xEnd - this.data.xStart;
-      kLine.tapMove1(length);
-      kLineB.tapMove2(length);
-      kLine.draw();
-      kLineB.draw();
+      // var length = this.data.xEnd - this.data.xStart;
+      // kLine.tapMove1(length);
+      // kLineB.tapMove2(length);
+      // kLine.draw();
+      // kLineB.draw();
     }
-    // kAxisShow.stop();
   }
 });
