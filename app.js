@@ -1,3 +1,12 @@
+// 设置国际化 https://www.jianshu.com/p/5d0da1e43948
+import locales from './utils/i18n/locale'
+import T from './utils/i18n/weapp-i18n'
+
+T.registerLocale(locales)
+T.setLocale('zh-Hans')
+// T.setLocale('en')
+wx.T = T
+
 //app.js
 App({
   onLaunch: function () {

@@ -1,5 +1,6 @@
 {
   "navigationBarTitleText": "",
   "usingComponents": {
+    "zan-loading": "../../utils/dist/loading/index"
   }
 }

@@ -1,47 +1,10 @@
 var Api = require('../../utils/api.js');
 const app = getApp();
-
+const _ = wx.T._
 
 // wx chart
 var wxCharts = require('../../utils/wxcharts.js');
 var areaChart = null;
-
-
-// function setOption(chart, currencyInfo) {
-//   const option = {
-//     backgroundColor: "#fff",
-//     color: ["#9FE6B8"],
-//     title: {
-//       text: this.data.currencyInfo.name + ' Charts',
-//       subtext: 'Price (USD)'
-//       // subtext: currencyInfo.name
-//     },
-//     tooltip: {
-//       trigger: 'axis'
-//     },
-//     dataZoom: {
-//       show: true,
-//       start: 70
-//     },
-//     xAxis: {
-//       type: 'category',
-//       boundaryGap: false,
-//       data: currencyInfo.history.date
-//     },
-//     yAxis: {
-//       x: 'center',
-//       type: 'value'
-//     },
-//     series: [{
-//       type: 'line',
-//       smooth: true,
-//       areaStyle: {},
-//       data: currencyInfo.history.close
-//     }
-//     ]
-//   };
-//   chart.setOption(option);
-// }
 
 Page({
   onReady: function () {
@@ -57,25 +20,27 @@ Page({
       quotesUSDVolume24h: 0,
       history: null
     },
+    label24Hour: _('Label24Hour'),
+    labelVolume: _('LabelVolume'),
+    labelCoinPair: _('LabelCoinPair'),
+    labelStats: _('LabelStats'),
+    labelRank: _('LabelRank'),
+    labelMarketCap: _('LabelMarketCap'),
+    labelCirculatingSupply: _('LabelCirculatingSupply'),
+    labelTotalSupply: _('LabelTotalSupply'),
+    labelMaxSupply: _('LabelMaxSupply'),
+
     ec: {
       lazyLoad: true
     },
     changePercentColor: "#259D22",
   },
   onLoad: function (options) {
-    // this.setData({
-    //   symbol: options.symbol
-    // })
     this.data.currencyInfo.symbol = options.symbol
     this.getBasicInfo(this.data.currencyInfo.symbol)
     this.getHistory()
     this.getCoinPairs()
   },
-  // touchHandler: function (e) {
-  //   console.log(areaChart.getCurrentDataIndex(e));
-  //   areaChart.showToolTip(e);
-  // },
-
   touchHandler: function (e) {
     console.log(areaChart.getCurrentDataIndex(e));
     areaChart.showToolTip(e, {

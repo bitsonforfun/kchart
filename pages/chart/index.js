@@ -2,6 +2,7 @@
  * Created by Lipeizhao on 2018/5/28.
  */
 var Api = require('../../utils/api.js');
+const _ = wx.T._
 
 var app = getApp();
 var kl = require('../../utils/wxChart/k-line');
@@ -100,16 +101,25 @@ Page({
     tabSlices: [],
     selectSlices: null,
     sliceNames: {
-      '1m': '1分钟',
-      '5m': '5分钟',
-      '15m': '15分钟',
-      '30m': '30分钟',
-      '1h': '1小时',
-      '6h': '6小时',
-      '1d': '1天'
+      '1m': _('Label1Minute'),
+      '5m': _('Label5Minute'),
+      '15m': _('Label15Minute'),
+      '30m': _('Label30Minute'),
+      '1h': _('Label1Hour'),
+      '6h': _('Label6Hour'),
+      '1d': _('Label1Day')
     },
     xStart: 0,
-    xEnd: 0
+    xEnd: 0,
+    chartLoaded: 1,
+    initialPrices: null,
+    // 国际化
+    labelKHigh: _('LabelKHigh'),
+    labelKLow: _('LabelKLow'),
+    labelKOpen: _('LabelKOpen'),
+    labelKCloseYesterday: _('LabelKCloseYesterday'),
+    labelKVolume: _('LabelKVolume'),
+    labelKValue: _('LabelKValue')
   },
   onLoad: function (options) {
     // 从上一个页面传进参数
@@ -135,15 +145,26 @@ Page({
     var api_url = Api.market_url + '/' + this.data.ex;
     Api.fetchGet(api_url, (err, res) => {
       this.data.market = res
+      var slicesLength = res.slices.length;
       if (res) {
-        for (var i = 0; i < res.slices.length; i++) {
-          if (i < 3) {
+        for (var i = 0; i < slicesLength; i++) {
+          if (slicesLength <= 4) {
             this.data.tabSlices.push(res.slices[i])
           } else {
-            if (!this.data.selectSlices) {
-              this.data.selectSlices = new Array()
+            if (i < 3) {
+              this.data.tabSlices.push(res.slices[i])
+            } else {
+              if (!this.data.selectSlices) {
+                this.data.selectSlices = new Array()
+              }
+              // var displayName = this.data.sliceNames[res.slices[i]];
+              // this.data.selectSlices.push(displayName)
+              var obj = {
+                id: res.slices[i],
+                name: this.data.sliceNames[res.slices[i]]
+              }
+              this.data.selectSlices.push(obj)
             }
-            this.data.selectSlices.push(res.slices[i])
           }
         }
       }
@@ -154,7 +175,18 @@ Page({
       });
     })
   },
+  setChartLoading: function () {
+    this.setData({
+      chartLoaded: 1
+    });
+  },
+  setChartLoaded: function () {
+    this.setData({
+      chartLoaded: 0
+    });
+  },
   tabChart: function (e) {
+    this.setChartLoading()
     var type = e.target.dataset.type;
     var api_url = Api.price_url + '?ex=' + this.data.ex + '&symbol=' + this.data.symbol + '&slice=' + type;
     this.data.tabName = type;
@@ -166,27 +198,23 @@ Page({
         "ex": "gdax",
         "code": "100000",
         "info": {
-          // "c": "15.77",
-          // "h": "15.90",
-          // "l": "15.70",
-          // "o": "15.80",
-          // "a": "231127600",
-          // "v": "146514",
           "yc": "15.99",
-          // "time": "2017-01-18 10:49:21",
-          // "ticks": "34200|54000|0|34200|41400|46800|54000",
-          // "total": "678",
           "pricedigit": "0.00"
         },
         "data": res.prices
       }
-
+      this.setChartLoaded()
       this.setData({
         tabName: this.data.tabName,
         symbol: this.data.symbol,
         ex: this.data.ex,
       });
+
       this.draw(this.data.data, this.data.tabName);
+      
+      // 设置初始值的显示
+      var lastPos = kLine.getLastCandleXAxis();
+      this.setPrice(lastPos)
     })
 
     //bitson
@@ -202,45 +230,37 @@ Page({
     kAxisShow.stop();
   },
   tabMinChart: function (e) {
-    // var type = 'd';
+    this.setChartLoading()
     var index = e.detail.value;
-    index = index === '' ? 0 : index;
-
-    // var typeList = ['1', '7', '30', '365'];
-    var type = this.data.selectSlices[index];
-
+    // index = index === '' ? 0 : index;
+    // var type = this.data.selectSlices[index];
+    var type = this.data.selectSlices[index].id;
     var api_url = Api.price_url + '?ex=' + this.data.ex + '&symbol=' + this.data.symbol + '&slice=' + type;
     this.data.tabName = 'selectK';
 
     Api.fetchGet(api_url, (err, res) => {
-      // this.data.data = res.prices
-
       this.data.data = {
         "symbol": "测试数据",
         "ex": "gdax",
         "code": "100000",
         "info": {
-          // "c": "15.77",
-          // "h": "15.90",
-          // "l": "15.70",
-          // "o": "15.80",
-          // "a": "231127600",
-          // "v": "146514",
           "yc": "15.99",
-          // "time": "2017-01-18 10:49:21",
-          // "ticks": "34200|54000|0|34200|41400|46800|54000",
-          // "total": "678",
           "pricedigit": "0.00"
         },
         "data": res.prices
       }
-
+      this.setChartLoaded()
       this.setData({
+        selectIndex: e.detail.value,
         tabName: this.data.tabName,
         symbol: this.data.symbol,
         ex: this.data.ex,
       });
       this.draw(this.data.data, this.data.tabName);
+
+      // 设置初始值的显示
+      var lastPos = kLine.getLastCandleXAxis();
+      this.setPrice(lastPos)
     })
     //bitson
     kAxisShow = axisShow('kline-axis', {
@@ -334,6 +354,10 @@ Page({
     }
   },
   setPrice: function (x) {
+    var rightMostCandelXAxis = kLine.getLastCandleXAxis();
+    if (x < 0 || x > rightMostCandelXAxis) {
+      return
+    }
     //bitson
     var p = kLine.getPriceByXaxis(x);
 

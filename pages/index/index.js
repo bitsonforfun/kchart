@@ -1,5 +1,6 @@
 var Api = require('../../utils/api.js');
 const app = getApp();
+const _ = wx.T._
 
 function setOption(chart, data) {
   const option = {
@@ -60,7 +61,7 @@ Page({
     tab: {
       list: [{
         id: '1',
-        title: '基础链'
+        title: _('TabNumberOneName')
       }, {
         id: '2',
         title: ''
@@ -71,7 +72,8 @@ Page({
       selectedId: '1',
       scroll: false,
       height: 30
-    }
+    },
+    labelMarketCap: _('LabelMarketCap')
   },
   onLoad: function () {
   },

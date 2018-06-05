@@ -15,6 +15,11 @@
   left: 0;
 }
 
+.loading-stage {
+  position: absolute;
+  top: 115px;
+}
+
 /******************************/
 
 /* sanban app wxss*/

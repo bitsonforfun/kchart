@@ -13,7 +13,7 @@
           price="${{ currency.quotesUSDPrice }}"
           title="{{ currency.name }} ({{ currency.symbol }})"
           rank="{{ currency.quotesUSDPercentChange24h }}"
-          desc="市值 #{{ currency.rank }} ${{ currency.quotesUSDMarketCap }}"
+          desc="{{ labelMarketCap }} #{{ currency.rank }} ${{ currency.quotesUSDMarketCap }}"
           status="">
         </zan-card>
       </zan-panel>

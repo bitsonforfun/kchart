@@ -61,6 +61,10 @@ module.exports = function (canvasId) {
       this.paddingRight = axis.paddingRight;
       this.dataStore = options;
     },
+    getLastCandleXAxis: function () {
+      var rightMost = this.canvasWidth - this.paddingRight - 1;
+      return rightMost
+    },
     getPriceByXaxis: function (xAxis) {
       var barW = (this.canvasWidth - this.paddingLeft - this.paddingRight) / this.unit;
       var gap = this.options.yAxis[0].gap;
@@ -671,7 +675,7 @@ module.exports = function (canvasId) {
       var yin_yang = option.yin_yang;
 
       // bitson
-      var tmp = this.getPriceByXaxis(373)
+      // var tmp = this.getPriceByXaxis(373)
 
       var max = this.yMax;//Math.max.apply(null, data_h);
       var min = this.yMin;//Math.min.apply(null, data_l);
