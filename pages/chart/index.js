@@ -121,6 +121,12 @@ Page({
     labelKVolume: _('LabelKVolume'),
     labelKValue: _('LabelKValue')
   },
+  onShareAppMessage: function (res) {
+    return {
+      title: '数字货币行情',
+      path: 'pages/chart/index?ex=' + this.data.ex + '&symbol=' + this.data.symbol
+    }
+  },
   onLoad: function (options) {
     // 从上一个页面传进参数
     this.data.ex = options.ex

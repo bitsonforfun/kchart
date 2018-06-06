@@ -32,7 +32,12 @@ function setOption(chart, data) {
 
 Page({
   onReady: function () {
-    // 获取组件
+    wx.getSystemInfo({
+      success: (res) => {
+        this.setData({
+          winH: res.windowHeight
+        });
+      }})    
     this.data.coin_img_url = Api.coin_img_url
     this.setData({
       coin_img_url: this.data.coin_img_url
@@ -53,7 +58,8 @@ Page({
     // currency query
     countPerPage: 15,
     cursor: 0,
-    
+    hasMore: true,
+    coinListingLimit: 50,
     // // percent change color, green when positive, otherwise red
     // isPercentChangePositive: true,
 
@@ -77,37 +83,15 @@ Page({
   },
   onLoad: function () {
   },
-  // init_charts: function (items) {
-  //   this.chartArray = new Array();
-  //   for (var i = 0; i < items.length; i++) {
-  //     var item = items[i];
-  //     var chart_id = '#chart-line-' + item.id;
-  //     var ecComponentArray = new Array();
-  //     ecComponentArray[item.id] = this.selectComponent(chart_id);
-      
-  //     ecComponentArray[item.id].init((canvas, width, height) => {
-  //       // 获取组件的 canvas、width、height 后的回调函数
-  //       // 在这里初始化图表
-  //       const chart = echarts.init(canvas, null, {
-  //         width: width,
-  //         height: height
-  //       });
-
-  //       var data = item.line.split(",")
-  //       setOption(chart, data);
-
-  //       // 将图表实例绑定到 this 上，可以在其他成员函数（如 dispose）中访问
-  //       this.chartArray[item.id] = chart;
-
-  //       // 注意这里一定要返回 chart 实例，否则会影响事件处理等
-  //       return chart;
-  //     });
-  //   }
-  // },
+  onShareAppMessage: function (res) {
+    return {
+      title: '数字货币行情',
+      path: '/pages/index/index'
+    }
+  },
   open: function (e) {
     wx.navigateTo({
       url: '../basic/index?symbol=' + e.currentTarget.dataset.currency.symbol
-      // url: '../chart2/index'
     });
   },
   tap: function (e) {
@@ -126,11 +110,12 @@ Page({
       scrollTop: this.data.scrollTop + 10
     })
   },
-  onReachBottom: function () {
-    // this.loadMore();
-    this.getData(this.data.countPerPage, this.data.cursor);
-    console.log('上拉加载更多', new Date());
-  },
+  // onReachBottom: function () {
+  //   // this.loadMore();
+  //   this.getData(this.data.countPerPage, this.data.cursor);
+  //   console.log('上拉加载更多', new Date());
+  // },
+
   // 获取货币列表数据
   getData: function (countPerPage, cursor) {
     var that = this;
@@ -145,13 +130,16 @@ Page({
         that.data.currencies.push(res.currencies[i])
       }
 
+      if (that.data.currencies.length >= that.data.coinListingLimit) {
+        that.data.hasMore = false;
+      }
+
       // 更新页面模型
       that.setData({
-        currencies: that.data.currencies
+        currencies: that.data.currencies,
+        hasMore: that.data.hasMore
       });
       
-      // 更新历史线图
-      // that.init_charts(that.data.currencies);
       that.data.cursor = that.data.cursor + that.data.countPerPage;
 
       // setTimeout(function () {
@@ -174,22 +162,8 @@ Page({
       currency.isPercentChangePositive = false
     }
   },
-  loadMore: function (limit) {
-    // var that = this;
-    // var api_url = Api.currency_url + '?sort=rank_asc&limit=' + limit;
-
-    // Api.fetchGet(api_url, (err, res) => {
-    //   //更新数据
-    //   that.data.currencies = res.currencies
-    //   that.setData({
-    //     currencies: that.data.currencies
-    //   });
-    //   // that.ecComponent = that.selectComponent('#chart-line');
-    //   that.init_charts(that.data.currencies);
-    //   // setTimeout(function () {
-    //   //   that.setData({ hidden: true });
-    //   //   wx.hideNavigationBarLoading();
-    //   // }, 300);
-    // })
+  loadMore: function (e) {
+    this.getData(this.data.countPerPage, this.data.cursor);
+    console.log('上拉加载更多', new Date());
   },
 })

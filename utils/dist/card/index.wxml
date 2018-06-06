@@ -42,9 +42,9 @@
         </view> -->
       </view>
 
-      <view wx:if="{{ status }}" class="zan-card__detail-row">
+      <!-- <view wx:if="{{ status }}" class="zan-card__detail-row">
         <view class="zan-card__left-col zan-c-red">{{ status }}</view>
-      </view>
+      </view> -->
     </block>
   </view>
 </view>

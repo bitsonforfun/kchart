@@ -35,6 +35,12 @@ Page({
     },
     changePercentColor: "#259D22",
   },
+  onShareAppMessage: function (res) {
+    return {
+      title: '数字货币行情',
+      path: '/pages/basic/index?symbol=' + this.data.currencyInfo.symbol
+    }
+  },
   onLoad: function (options) {
     this.data.currencyInfo.symbol = options.symbol
     this.getBasicInfo(this.data.currencyInfo.symbol)
