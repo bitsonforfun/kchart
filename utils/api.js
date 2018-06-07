@@ -4,12 +4,15 @@
 // var host = '112.74.58.94'
 // var host = '172.128.11.10:6060' // sugar
 
+var image_host = 'thetacdn.meinvjpg.com'
 var host = 'theta.meinvjpg.com'
 var base_url = 'https://' + host + '/api/1'
-var img_url = 'https://' + host + '/static/img'
+var img_url = 'http://' + image_host
+var coin_img_url = img_url
+
+// var img_url = 'https://' + host + '/static/img'
 // var base_url = 'http://' + host + '/api/1'
 // var img_url = 'http://' + host + '/static/img'
-var coin_img_url = img_url + '/coin'
 
 var currency_url = base_url + '/currencies';
 var history_url = base_url + '/histories';

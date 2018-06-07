@@ -60,6 +60,7 @@ Page({
     cursor: 0,
     hasMore: true,
     coinListingLimit: 50,
+    coinListLoading: false,
     // // percent change color, green when positive, otherwise red
     // isPercentChangePositive: true,
 
@@ -125,9 +126,11 @@ Page({
       //更新数据
       // that.data.currencies = res.currencies
       for (var i = 0; i < res.currencies.length; i++) {
-        that.currencToLocalString(res.currencies[i])
-        that.setChangePercentColor(res.currencies[i])
-        that.data.currencies.push(res.currencies[i])
+        if (that.data.currencies.length <= that.data.coinListingLimit) {
+          that.currencToLocalString(res.currencies[i])
+          that.setChangePercentColor(res.currencies[i])
+          that.data.currencies.push(res.currencies[i])
+        }
       }
 
       if (that.data.currencies.length >= that.data.coinListingLimit) {
@@ -141,6 +144,9 @@ Page({
       });
       
       that.data.cursor = that.data.cursor + that.data.countPerPage;
+
+      // 防止上拉页面后重复加载
+      this.data.coinListLoading = false
 
       // setTimeout(function () {
       //   that.setData({ hidden: true });
@@ -163,7 +169,10 @@ Page({
     }
   },
   loadMore: function (e) {
-    this.getData(this.data.countPerPage, this.data.cursor);
-    console.log('上拉加载更多', new Date());
+    if (!this.data.coinListLoading) {
+      this.data.coinListLoading = true
+      this.getData(this.data.countPerPage, this.data.cursor);
+      console.log('上拉加载更多', new Date());
+    }
   },
 })
