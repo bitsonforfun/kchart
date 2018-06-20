@@ -1,12 +1,12 @@
 <zan-panel class="panel-example">
-  <view style="padding-top:30rpx;padding-left:30rpx;padding-bottom:0;font-size:70rpx">$ {{ currencyInfo.quotesUSDPrice }}</view>
+  <view style="padding-top:30rpx;padding-left:30rpx;padding-bottom:0;font-size:70rpx">{{ currencyUnit }} {{ currencyInfo.quotesUSDPrice }}</view>
   <view style="padding-top:4rpx;padding-left:30rpx;padding-bottom:0rpx;font-size:32rpx;color:{{ changePercentColor }}">{{ currencyInfo.quotesUSDPercentChange24h }}% ({{ label24Hour }})</view>
-  <view style="padding-top:4rpx;padding-left:30rpx;padding-bottom:6rpx;font-size:26rpx;color:#A0A0A0">{{ labelVolume }} {{ currencyInfo.quotesUSDVolume24h }} USD</view>
+  <view style="padding-top:4rpx;padding-left:30rpx;padding-bottom:6rpx;font-size:26rpx;color:#A0A0A0">{{ labelVolume }} {{ currencyUnit }}{{ currencyInfo.quotesUSDVolume24h }}</view>
 </zan-panel>
- 
+
 <!-- wx chart -->
 <view class="container3" style=''>
-    <canvas canvas-id="areaCanvas" class="canvas" bindtouchstart="touchHandler"></canvas>
+  <canvas canvas-id="areaCanvas" class="canvas" bindtouchstart="touchHandler"></canvas>
 </view>
 
 <block wx:if="{{coinpairs}}">
@@ -19,13 +19,22 @@
   </zan-panel>
 </block>
 
+<!-- <block wx:if="{{D}}">
+  <zan-panel class="cell-panel-demo" title="价格趋势">
+    <zan-cell-group>
+      <zan-cell bindtap="open" data-pair="{{ exchange }}" title="{{ exName }}" value="{{ }}" is-link></zan-cell>
+    </zan-cell-group>
+  </zan-panel>
+</block> -->
 
-<zan-panel title="{{ labelStats }}" class="panel-example">
-  <zan-cell-group>
-    <zan-cell title="{{ labelRank }}" label="" value="{{ currencyInfo.rank }}"></zan-cell>
-    <zan-cell title="{{ labelMarketCap }}" label="" value="{{ currencyInfo.quotesUSDMarketCap }}"></zan-cell>
-    <zan-cell title="{{ labelCirculatingSupply }}" label="" value="{{ currencyInfo.circulatingSupply }}"></zan-cell>
-    <zan-cell title="{{ labelTotalSupply }}" label="" value="{{ currencyInfo.totalSupply }}"></zan-cell>
-    <zan-cell title="{{ labelMaxSupply }}" label="" value="{{ currencyInfo.maxSupply }}"></zan-cell>
-  </zan-cell-group>
-</zan-panel>
+<block wx:if="{{!D}}">
+  <zan-panel title="{{ labelStats }}" class="panel-example">
+    <zan-cell-group>
+      <zan-cell title="{{ labelRank }}" label="" value="{{ currencyInfo.rank?currencyInfo.rank:'-' }}"></zan-cell>
+      <zan-cell title="{{ labelMarketCap }}" label="" value="{{ currencyInfo.quotesUSDMarketCap ? currencyInfo.quotesUSDMarketCap:'-'}}"></zan-cell>
+      <zan-cell title="{{ labelCirculatingSupply }}" label="" value="{{ currencyInfo.circulatingSupply?currencyInfo.circulatingSupply:'-' }}"></zan-cell>
+      <zan-cell title="{{ labelTotalSupply }}" label="" value="{{ currencyInfo.totalSupply?currencyInfo.totalSupply:'-' }}"></zan-cell>
+      <zan-cell title="{{ labelMaxSupply }}" label="" value="{{ currencyInfo.maxSupply?currencyInfo.maxSupply:'-' }}"></zan-cell>
+    </zan-cell-group>
+  </zan-panel>
+</block>

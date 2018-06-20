@@ -1,6 +1,7 @@
 /**
  * Created by Lipeizhao on 2018/5/28.
  */
+
 var Api = require('../../utils/api.js');
 const _ = wx.T._
 
@@ -107,7 +108,8 @@ Page({
       '30m': _('Label30Minute'),
       '1h': _('Label1Hour'),
       '6h': _('Label6Hour'),
-      '1d': _('Label1Day')
+      '1d': _('Label1Day'),
+      '1mon': _('Label1Month')
     },
     xStart: 0,
     xEnd: 0,
@@ -123,7 +125,7 @@ Page({
   },
   onShareAppMessage: function (res) {
     return {
-      title: '数字货币行情',
+      title: '行情查询',
       path: 'pages/chart/index?ex=' + this.data.ex + '&symbol=' + this.data.symbol
     }
   },
@@ -139,47 +141,66 @@ Page({
     this.getSlice()
 
     // 默认切换到15m钟线
-    this.tabChart({
-      target: {
-        dataset: {
-          type: '15m'
-        }
-      }
-    })
-  },
-  getSlice: function () {
-    var api_url = Api.market_url + '/' + this.data.ex;
-    Api.fetchGet(api_url, (err, res) => {
-      this.data.market = res
-      var slicesLength = res.slices.length;
-      if (res) {
-        for (var i = 0; i < slicesLength; i++) {
-          if (slicesLength <= 4) {
-            this.data.tabSlices.push(res.slices[i])
-          } else {
-            if (i < 3) {
-              this.data.tabSlices.push(res.slices[i])
-            } else {
-              if (!this.data.selectSlices) {
-                this.data.selectSlices = new Array()
-              }
-              // var displayName = this.data.sliceNames[res.slices[i]];
-              // this.data.selectSlices.push(displayName)
-              var obj = {
-                id: res.slices[i],
-                name: this.data.sliceNames[res.slices[i]]
-              }
-              this.data.selectSlices.push(obj)
-            }
+    if (wx.D) {
+      this.tabChart({
+        target: {
+          dataset: {
+            type: '1mon'
           }
         }
-      }
+      })
+    } else {
+      this.tabChart({
+        target: {
+          dataset: {
+            type: '15m'
+          }
+        }
+      })
+    }
+  },
+  getSlice: function () {
+    if (wx.D) {
+      this.data.tabSlices.push('1mon')
       this.setData({
         tabSlices: this.data.tabSlices,
         selectSlices: this.data.selectSlices,
         sliceNames: this.data.sliceNames
       });
-    })
+    } else {
+      var api_url = Api.market_url + '/' + this.data.ex;
+      Api.fetchGet(api_url, (err, res) => {
+        this.data.market = res
+        var slicesLength = res.slices.length;
+        if (res) {
+          for (var i = 0; i < slicesLength; i++) {
+            if (slicesLength <= 4) {
+              this.data.tabSlices.push(res.slices[i])
+            } else {
+              if (i < 3) {
+                this.data.tabSlices.push(res.slices[i])
+              } else {
+                if (!this.data.selectSlices) {
+                  this.data.selectSlices = new Array()
+                }
+                // var displayName = this.data.sliceNames[res.slices[i]];
+                // this.data.selectSlices.push(displayName)
+                var obj = {
+                  id: res.slices[i],
+                  name: this.data.sliceNames[res.slices[i]]
+                }
+                this.data.selectSlices.push(obj)
+              }
+            }
+          }
+        }
+        this.setData({
+          tabSlices: this.data.tabSlices,
+          selectSlices: this.data.selectSlices,
+          sliceNames: this.data.sliceNames
+        });
+      })
+    }
   },
   setChartLoading: function () {
     this.setData({
@@ -340,7 +361,7 @@ Page({
       times++;
     }
 
-    value = value.toFixed(2)
+    value = value.toFixed(1)
 
     var arr = String(value).split(".")
     obj.dec = arr[1];

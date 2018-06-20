@@ -18,6 +18,7 @@ Component({
       type: Boolean,
       value: false
     },
+    percentageMark: String,
     thumb: String,
     price: String,
     title: String,

@@ -24,8 +24,8 @@
       </view>
 
       <view class="zan-card__detail-row" style='margin-bottom:0px'>
-        <view wx:if="{{ rank && (isPercentChangePositive == true)}}" class="zan-card__right-col" style='color:#DC143C'> +{{ rank }}%</view>
-        <view wx:if="{{ rank && (isPercentChangePositive == false)}}" class="zan-card__right-col" style='color:#259D22'> {{ rank }}%</view>
+        <view wx:if="{{ rank && (isPercentChangePositive == true)}}" class="zan-card__right-col" style='color:#DC143C'> +{{ rank }}{{ percentageMark }}</view>
+        <view wx:if="{{ rank && (isPercentChangePositive == false)}}" class="zan-card__right-col" style='color:#259D22'> {{ rank }}{{ percentageMark }}</view>
         <view wx:if="{{ desc }}" class="zan-card__left-col zan-c-gray-darker" style='font-size:12px;margin-left:1px'>
           {{ desc }}
         </view>

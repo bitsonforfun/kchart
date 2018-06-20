@@ -2,6 +2,8 @@
 import locales from './utils/i18n/locale'
 import T from './utils/i18n/weapp-i18n'
 
+var Api = require('./utils/api.js');
+
 T.registerLocale(locales)
 T.setLocale('zh-Hans')
 // T.setLocale('en')
@@ -19,6 +21,16 @@ App({
     wx.login({
       success: res => {
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
+        var code = res.code;
+        if (code) {
+          console.log('获取用户登录凭证：' + code);
+          var api_url = Api.auth_url + '?code=' + code;
+          // Api.fetchGet(api_url, (err, res) => {
+          //   wx.D = res
+          // })
+        } else {
+          console.log('获取用户登录态失败：' + res.errMsg);
+        }
       }
     })
     // 获取用户信息

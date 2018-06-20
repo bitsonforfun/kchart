@@ -68,24 +68,66 @@ module.exports = function (canvasId) {
     getPriceByXaxis: function (xAxis) {
       var barW = (this.canvasWidth - this.paddingLeft - this.paddingRight) / this.unit;
       var gap = this.options.yAxis[0].gap;
-      var index = Math.floor((xAxis - this.paddingLeft) / (gap + barW));
-      var data = this.options.yAxis[0];
-      var y = 0;
-      if (index != 0) {
-        y = data.data_c[index - 1]
+      var index = null;
+      var data = null;
+      var y = null;
+
+      if (this.offsetX > 0) {
+        index = Math.floor((xAxis - this.paddingLeft) / (gap + barW));
+        data = this.options.yAxis[0];
+        y = 0;
+        if (index > this.offsetX) {
+          return {
+            date: '',
+            l: 0,
+            h: 0,
+            c: 0,
+            s: 0,
+            y: 0,
+            v: 0,
+            e: 0,
+            f: 0,
+            index: index
+          }
+        } else {
+          if (index != 0) {
+            y = data.data_c[index + this.offsetX]
+          }
+          return {
+            date: this.options.xAxis.data[index + this.offsetX],
+            l: data.data_l[index + this.offsetX],
+            h: data.data_h[index + this.offsetX],
+            c: data.data_c[index + this.offsetX],
+            s: data.data_s[index + this.offsetX],
+            y: y,
+            v: data.data_v[index + this.offsetX],
+            e: data.data_e[index + this.offsetX],
+            f: data.data_f[index + this.offsetX],
+            index: index
+          }
+        }
+      } else {
+        index = Math.floor((xAxis - this.paddingLeft) / (gap + barW));
+        data = this.options.yAxis[0];
+        y = 0;
+        if (index != 0) {
+          y = data.data_c[index - 1]
+        }
+        return {
+          date: this.options.xAxis.data[index],
+          l: data.data_l[index],
+          h: data.data_h[index],
+          c: data.data_c[index],
+          s: data.data_s[index],
+          y: y,
+          v: data.data_v[index],
+          e: data.data_e[index],
+          f: data.data_f[index],
+          index: index
+        }
       }
-      return {
-        date: this.options.xAxis.data[index],
-        l: data.data_l[index],
-        h: data.data_h[index],
-        c: data.data_c[index],
-        s: data.data_s[index],
-        y: y,
-        v: data.data_v[index],
-        e: data.data_e[index],
-        f: data.data_f[index],
-        index: index
-      }
+      
+      
     },
     // bitsonbitson
     tapMove1: function (length) {
@@ -93,6 +135,10 @@ module.exports = function (canvasId) {
       // k 线部分
       //////////////////////////
       var dataStore = this.options;
+      if (dataStore.originData.length < this.offsetX) {
+        return
+      }
+
       var yMax = this.yMax = 0;
       var yMin = this.yMin = 1000000;
 
@@ -211,6 +257,10 @@ module.exports = function (canvasId) {
       // 成交量部分
       //////////////////////////
       var dataStore = this.options;
+      if (dataStore.originData.length < this.offsetX) {
+        return
+      }
+      
       var startTime = this.startTime;
       var endTime = this.endTime;
       var yMax = this.yMax = 0;

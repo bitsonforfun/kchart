@@ -1,3 +1,7 @@
+/**
+ * Created by Lipeizhao on 2018/5/28.
+ */
+
 var Api = require('../../utils/api.js');
 const app = getApp();
 const _ = wx.T._
@@ -8,7 +12,6 @@ var areaChart = null;
 
 Page({
   onReady: function () {
-    
   },
   data: {
     currencyInfo: {
@@ -34,10 +37,11 @@ Page({
       lazyLoad: true
     },
     changePercentColor: "#259D22",
+    currencyUnit: '$'
   },
   onShareAppMessage: function (res) {
     return {
-      title: '数字货币行情',
+      title: '行情查询',
       path: '/pages/basic/index?symbol=' + this.data.currencyInfo.symbol
     }
   },
@@ -177,41 +181,81 @@ Page({
     })
   },
   getCoinPairs: function () {
-    var api_url = Api.coinpair_url + '/' + this.data.currencyInfo.symbol
-    Api.fetchGet(api_url, (err, res) => {
-      //更新数据
-      this.data.currencyInfo.coinpairs = res.spiders
-      // this.setData({
-      //   currencyInfo: this.data.currencyInfo
-      // });
-      if (res.spiders.length == 0) {
-        this.setData({
-          coinpairs: null
-        });
-      } else {
-        this.setData({
-          coinpairs: this.data.currencyInfo.coinpairs
-        });
-      }
+    if (wx.D) {
       
-    })
+    } else {
+      var api_url = Api.coinpair_url + '/' + this.data.currencyInfo.symbol
+      Api.fetchGet(api_url, (err, res) => {
+        //更新数据
+        this.data.currencyInfo.coinpairs = res.spiders
+        // this.setData({
+        //   currencyInfo: this.data.currencyInfo
+        // });
+        if (res.spiders.length == 0) {
+          this.setData({
+            coinpairs: null
+          });
+        } else {
+          this.setData({
+            coinpairs: this.data.currencyInfo.coinpairs
+          });
+        }
+
+      })
+    }
   },
   // 获取货币数据
   getBasicInfo: function (symbol) {
-    var api_url = Api.currency_url + '/' + symbol
-    Api.fetchGet(api_url, (err, res) => {
-      //更新数据
-      this.currencyToLocalString(res)
-      this.setChangePercentColor(res)
-      this.data.currencyInfo = res
-      this.setData({
-        currencyInfo: this.data.currencyInfo
-      });
+    if (wx.D) {
+      var api_url = Api.currency_url + '/' + symbol
+      Api.fetchGet(api_url, (err, res) => {
+        res.rank = res.rank - 10000
+        res.quotesUSDPercentChange24h = (res.quotesUSDPercentChange24h * 100).toFixed(2)
+        res.quotesUSDVolume24h = ''
+        this.currencyToLocalString(res)
+        this.setChangePercentColor(res)
+        this.data.currencyInfo = res
+        this.setData({
+          currencyInfo: this.data.currencyInfo
+        });
 
-      //set navigation bar title text
-      this.setNavigationBarTitleText()
-      // this.init_chart(this.data.currencyInfo)
-    })
+        //set navigation bar title text
+        this.setNavigationBarTitleText()
+        // this.init_chart(this.data.currencyInfo)
+        var exName = '广州地区';
+        var ex = '';
+        var exchange = {
+          ex: this.data.currencyInfo.name,
+          symbol: this.data.currencyInfo.symbol
+        }
+        this.setData({
+          D: wx.D,
+          currencyUnit: '￥',
+          // labelVolume: '成交量(1个月)',
+          labelVolume: '',
+          currencyUnit: '',
+          label24Hour: '1个月',
+          // label24Hour: '',
+          exchange: exchange,
+          exName: exName
+        });
+      })
+    } else {
+      var api_url = Api.currency_url + '/' + symbol
+      Api.fetchGet(api_url, (err, res) => {
+        //更新数据
+        this.currencyToLocalString(res)
+        this.setChangePercentColor(res)
+        this.data.currencyInfo = res
+        this.setData({
+          currencyInfo: this.data.currencyInfo
+        });
+
+        //set navigation bar title text
+        this.setNavigationBarTitleText()
+        // this.init_chart(this.data.currencyInfo)
+      })
+    }
   },
   setOption: function(chart, currencyInfo) {
     const option = {

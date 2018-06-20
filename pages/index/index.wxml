@@ -7,10 +7,11 @@
         <zan-panel without-border>
           <zan-card isPercentChangePositive="{{ currency.isPercentChangePositive }}
           card-class=" test-card zan-card__thumb2 "
-          thumb="{{ coin_img_url }}/{{ currency.symbol }}.png "
-          price="${{ currency.quotesUSDPrice }} "
+          thumb="{{ coin_img_url }}/{{ currency.symbol }}.png"
+          price="{{ currencyUnit }} {{ currency.quotesUSDPrice }} "
           title="{{ currency.name }} ({{ currency.symbol }}) "
-          rank="{{ currency.quotesUSDPercentChange24h }} "
+          rank="{{ currency.quotesUSDPercentChange24h }}"
+          percentageMark="{{ percentageMark }}"
           desc="{{ labelMarketCap }} #{{ currency.rank }} ${{ currency.quotesUSDMarketCap }} "
           status=" ">
           </zan-card>
