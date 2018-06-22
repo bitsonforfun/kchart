@@ -1,0 +1,14 @@
+{
+  "navigationBarTitleText": "ThetA",
+  "usingComponents": {
+    "zan-card": "../../utils/dist/card/index",
+    "zan-tab": "../../utils/dist/tab/index",
+    "zan-loading": "../../utils/dist/loading/index",
+    "zan-cell": "../../utils/dist/cell/index",
+    "zan-cell-group": "../../utils/dist/cell-group/index",
+    "zan-actionsheet": "../../utils/dist/actionsheet/index",
+    "zan-row": "../../utils/dist/row/index",
+    "zan-col": "../../utils/dist/col/index",
+    "zan-panel": "../../utils/dist/panel/index"
+  }
+}

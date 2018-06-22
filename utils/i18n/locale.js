@@ -1,6 +1,7 @@
 export default {
     "en": {
         "TabNumberOneName": "Market Cap",
+        "TabNumberTwoName": "My Currency",
         "LabelMarketCap": "Market Cap",
         "Label24Hour": "24h",
         "LabelVolume": "volume(24h)",
@@ -27,10 +28,13 @@ export default {
         "LabelKClose": "C",
         "LabelKCloseYesterday": "CY",
         "LabelKVolume": "V",
-        "LabelKValue": "V2"
+        "LabelKValue": "V2",
+        "LabelMineCurrencyUnitSetupDesc": "Currency Unit",
+        "LabelMineAboutUs": "About Us"
     },
     "zh-Hans": {
       "TabNumberOneName": "市值/涨幅",
+      "TabNumberTwoName": "自选",
       "LabelMarketCap": "市值",
       "Label24Hour": "24小时",
       "LabelVolume": "成交量(24小时)",
@@ -57,6 +61,8 @@ export default {
       "LabelKClose": "收",
       "LabelKCloseYesterday": "昨",
       "LabelKVolume": "量",
-      "LabelKValue": "额"
+      "LabelKValue": "额",
+      "LabelMineCurrencyUnitSetupDesc": "货币单位设置",
+      "LabelMineAboutUs": "关于我们"
     }
 }

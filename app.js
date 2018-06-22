@@ -25,9 +25,12 @@ App({
         if (code) {
           console.log('获取用户登录凭证：' + code);
           var api_url = Api.auth_url + '?code=' + code;
-          // Api.fetchGet(api_url, (err, res) => {
-          //   wx.D = res
-          // })
+          Api.fetchPost(api_url, '', (err, res) => {
+            var sessionId = res.data.session_id;
+            var userId = res.data.user_id;
+            wx.setStorageSync('sessionId', sessionId)
+            wx.setStorageSync('userId', userId)
+          })
         } else {
           console.log('获取用户登录态失败：' + res.errMsg);
         }

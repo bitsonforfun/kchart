@@ -18,9 +18,9 @@ Page({
       name: '',
       symbol: '',
       rank: -1,
-      quotesUSDPrice: 0,
-      quotesUSDMarketCap: 0,
-      quotesUSDVolume24h: 0,
+      quotesPrice: 0,
+      quotesMarketCap: 0,
+      quotesVolume24h: 0,
       history: null
     },
     label24Hour: _('Label24Hour'),
@@ -210,8 +210,8 @@ Page({
       var api_url = Api.currency_url + '/' + symbol
       Api.fetchGet(api_url, (err, res) => {
         res.rank = res.rank - 10000
-        res.quotesUSDPercentChange24h = (res.quotesUSDPercentChange24h * 100).toFixed(2)
-        res.quotesUSDVolume24h = ''
+        res.quotesPercentChange24h = (res.quotesPercentChange24h * 100).toFixed(2)
+        res.quotesVolume24h = ''
         this.currencyToLocalString(res)
         this.setChangePercentColor(res)
         this.data.currencyInfo = res
@@ -276,7 +276,7 @@ Page({
       color: ["#4EABD9", "#67E0E3", "#9FE6B8"],
       title: {
         // text: this.data.currencyInfo.name + ' Charts',
-        // subtext: 'Price (USD)'
+        // subtext: 'Price ()'
         // subtext: currencyInfo.name
       },
       tooltip: {
@@ -337,15 +337,15 @@ Page({
     wx.setNavigationBarTitle({ title: this.data.currencyInfo.name + ' ('  + this.data.currencyInfo.symbol + ')' })
   },
   currencyToLocalString: function (currency) {
-    currency.quotesUSDPrice = currency.quotesUSDPrice && currency.quotesUSDPrice.toLocaleString()
-    currency.quotesUSDMarketCap = currency.quotesUSDMarketCap && currency.quotesUSDMarketCap.toLocaleString()
+    currency.quotesPrice = currency.quotesPrice && currency.quotesPrice.toLocaleString()
+    currency.quotesMarketCap = currency.quotesMarketCap && currency.quotesMarketCap.toLocaleString()
     currency.circulatingSupply = currency.circulatingSupply && currency.circulatingSupply.toLocaleString()
     currency.totalSupply = currency.totalSupply && currency.totalSupply.toLocaleString()
     currency.maxSupply = currency.maxSupply && currency.maxSupply.toLocaleString()
-    currency.quotesUSDVolume24h = currency.quotesUSDVolume24h && currency.quotesUSDVolume24h.toLocaleString()
+    currency.quotesVolume24h = currency.quotesVolume24h && currency.quotesVolume24h.toLocaleString()
   },
   setChangePercentColor: function (currency) {
-    if (currency.quotesUSDPercentChange24h > 0) {
+    if (currency.quotesPercentChange24h > 0) {
       this.data.changePercentColor = '#259D22'
     } else {
       this.data.changePercentColor = '#DC143C'

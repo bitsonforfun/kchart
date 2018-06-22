@@ -4,6 +4,8 @@
     "zan-card": "../../utils/dist/card/index",
     "zan-panel": "../../utils/dist/panel/index",
     "zan-tab": "../../utils/dist/tab/index",
-    "zan-loading": "../../utils/dist/loading/index"
+    "zan-loading": "../../utils/dist/loading/index",
+    "zan-button": "../../utils/dist/btn/index",
+    "zan-button-group": "../../utils/dist/btn-group/index"
   }
 }

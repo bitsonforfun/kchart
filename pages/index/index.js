@@ -23,16 +23,15 @@ Page({
     this.getExchange()
   },
   data: {
-    ec: {
-      lazyLoad: true
-    },
-
     // icon url
     coin_img_url: '',
 
     // currency query result
     currencies: [],
     currencyUnit: '$',
+
+    // my currency query result
+    myCurrencies: [],
     
     // currency query
     countPerPage: 15,
@@ -40,6 +39,13 @@ Page({
     hasMore: true,
     coinListingLimit: 50,
     coinListLoading: false,
+
+    // my currency query
+    myCountPerPage: 15,
+    myCursor: 0,
+    myHasMore: true,
+    myCoinListingLimit: 50,
+    myCoinListLoading: false,
 
     percentageMark: '%',
     // tab
@@ -59,6 +65,8 @@ Page({
       scroll: false,
       height: 30
     },
+    tabIndex: 1,
+
     labelMarketCap: _('LabelMarketCap')
   },
   onLoad: function () {
@@ -74,22 +82,32 @@ Page({
       url: '../basic/index?symbol=' + e.currentTarget.dataset.currency.symbol
     });
   },
-  tap: function (e) {
-    for (var i = 0; i < order.length; ++i) {
-      if (order[i] === this.data.toView) {
-        this.setData({
-          toView: order[i + 1],
-          scrollTop: (i + 1) * 200
-        })
-        break
-      }
-    }
+  myOpen: function (e) {
+    wx.navigateTo({
+      url: '../basic/index?symbol=' + e.currentTarget.dataset.currency.symbol
+    });
   },
-  tapMove: function (e) {
-    this.setData({
-      scrollTop: this.data.scrollTop + 10
-    })
-  },
+  openSelectMyCurrencies: function (e) {
+    wx.navigateTo({
+      url: '../selectmine/index'
+    });
+  }, 
+  // tap: function (e) {
+  //   for (var i = 0; i < order.length; ++i) {
+  //     if (order[i] === this.data.toView) {
+  //       this.setData({
+  //         toView: order[i + 1],
+  //         scrollTop: (i + 1) * 200
+  //       })
+  //       break
+  //     }
+  //   }
+  // },
+  // tapMove: function (e) {
+  //   this.setData({
+  //     scrollTop: this.data.scrollTop + 10
+  //   })
+  // },
   // for mini
   getExchange: function () {
     var api_url = Api.base_url + '/exchange';
@@ -103,7 +121,7 @@ Page({
           title: wx.D ? '广州楼盘均价' : _('TabNumberOneName')
         }, {
           id: '2',
-          title: ''
+          title: wx.D ? '': _('TabNumberTwoName')
         }, {
           id: '3',
           title: ''
@@ -121,11 +139,18 @@ Page({
 
       // for mini, get data
       this.getData(this.data.countPerPage, this.data.cursor);
+      this.getMyData(this.data.myCountPerPage, this.data.myCursor);
     })
+  },
+  tabChange: function (e) {
+    var tabIndex = parseInt(e.detail);
+    this.setData({
+      tabIndex: tabIndex,
+    });
   },
   // 获取货币列表数据
   getData: function (countPerPage, cursor) {
-    // for project d
+    // for mini
     if (wx.D) {
       var that = this;
       var api_url = Api.currency_url + '?sort=rank_asc&limit=' + countPerPage + '&start=' + cursor + '&d=1';
@@ -133,10 +158,10 @@ Page({
         //更新数据
         for (var i = 0; i < res.currencies.length; i++) {
           if (that.data.currencies.length <= that.data.coinListingLimit) {
-            res.currencies[i].quotesUSDMarketCap = ''
+            res.currencies[i].quotesMarketCap = ''
             res.currencies[i].rank = res.currencies[i].rank - 10000
-            // res.currencies[i].quotesUSDPercentChange24h = (res.currencies[i].quotesUSDPercentChange24h * 100).toFixed(2)
-            res.currencies[i].quotesUSDPercentChange24h = ''
+            // res.currencies[i].quotesPercentChange24h = (res.currencies[i].quotesPercentChange24h * 100).toFixed(2)
+            res.currencies[i].quotesPercentChange24h = ''
             that.currencToLocalString(res.currencies[i])
             that.setChangePercentColor(res.currencies[i])
             that.data.currencies.push(res.currencies[i])
@@ -193,15 +218,48 @@ Page({
     }
 
   },
+  getMyData: function (countPerPage, cursor) {
+    var that = this;
+    var token = wx.getStorageSync('token');
+    if (token) {
+      var api_url = Api.currency_url + '?sort=rank_asc&limit=' + countPerPage + '&start=' + cursor + '&onlyOptionalCurrency=true&token=' + token;
+      Api.fetchGet(api_url, (err, res) => {
+        var count = that.data.myCurrencies.length;
+        for (var i = 0; i < res.currencies.length; i++) {
+          if (count < that.data.myCoinListingLimit) {
+            that.currencToLocalString(res.currencies[i])
+            that.setChangePercentColor(res.currencies[i])
+            that.data.myCurrencies.push(res.currencies[i])
+            count += 1
+          }
+        }
+        if (that.data.myCurrencies.length >= that.data.myCoinListingLimit) {
+          that.data.myHasMore = false;
+        }
+
+        // 更新页面模型
+        that.setData({
+          myCurrencies: that.data.myCurrencies,
+          myHasMore: that.data.myHasMore,
+          percentageMark: '%'
+        });
+
+        that.data.myCursor = that.data.myCursor + that.data.myCountPerPage;
+
+        // 防止上拉页面后重复加载
+        this.data.coinListLoading = false
+      })
+    }
+  },
   currencToLocalString: function (currency) {
-    currency.quotesUSDPrice = currency.quotesUSDPrice && currency.quotesUSDPrice.toLocaleString()
-    currency.quotesUSDMarketCap = currency.quotesUSDMarketCap && currency.quotesUSDMarketCap.toLocaleString()
+    currency.quotesPrice = currency.quotesPrice && currency.quotesPrice.toLocaleString()
+    currency.quotesMarketCap = currency.quotesMarketCap && currency.quotesMarketCap.toLocaleString()
     currency.circulatingSupply = currency.circulatingSupply && currency.circulatingSupply.toLocaleString()
     currency.totalSupply = currency.totalSupply && currency.totalSupply.toLocaleString()
     currency.maxSupply = currency.maxSupply && currency.maxSupply.toLocaleString()
   },
   setChangePercentColor: function (currency) {
-    if (currency.quotesUSDPercentChange24h > 0) {
+    if (currency.quotesPercentChange24h > 0) {
       currency.isPercentChangePositive = true
     } else {
       currency.isPercentChangePositive = false
@@ -211,6 +269,13 @@ Page({
     if (!this.data.coinListLoading) {
       this.data.coinListLoading = true
       this.getData(this.data.countPerPage, this.data.cursor);
+      console.log('上拉加载更多', new Date());
+    }
+  },
+  myLoadMore: function (e) {
+    if (!this.data.myCoinListLoading) {
+      this.data.myCoinListLoading = true
+      this.getMyData(this.data.myCountPerPage, this.data.myCursor);
       console.log('上拉加载更多', new Date());
     }
   },

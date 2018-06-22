@@ -1,0 +1,21 @@
+<view class="search-wrap">
+    <wxc-search class="search" align="center" bg-color="#fff" bind:input="onInput" show-clear="{{false}}"></wxc-search>
+</view>
+
+<scroll-view scroll-y="true" lower-threshold="200" style="height:{{ winH }}px;" bindscrolltolower="loadMore" bindscrolltoupper="refesh">
+  <view class="list-wrap">
+    <view class="list-item">
+      <block wx:for="{{currencies}}" wx:for-item="currency" wx:key="{{currency.id}}">
+        <view class="list-check">
+          <view class="check-wrap" bindtap="onCheck" data-checked="{{ currency.isOptionalCurrency }}" data-symbol="{{ currency.symbol }}" data-currency="{{ currency }}">
+            <wxc-icon wx:if="{{currency.isOptionalCurrency}}" class="check" type="check" size="46" color="#ff5777"></wxc-icon>
+          </view>
+          <wxc-list class="item" title="{{ currency.symbol }} {{ currency.name }}" desc="{{ currencyUnit }}{{ currency.quotesPrice }}" mode="none"></wxc-list>
+        </view>
+      </block>
+    </view>
+  </view>
+  <view wx:if="{{ hasMore }} ">
+    <zan-loading type="spinner " class="loading-stage " color="black " style="width:100%; "></zan-loading>
+  </view>
+</scroll-view>

@@ -2,12 +2,34 @@
   "pages":[
     "pages/index/index",
     "pages/basic/index",
-    "pages/chart/index"
+    "pages/chart/index",
+    "pages/mine/index",
+    "pages/selectmine/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "backgroundColor": "#eee",
     "navigationBarBackgroundColor": "#eee",
     "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#666666",
+    "selectedColor": "#ff4a4a",
+    "borderStyle": "white",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "行情",
+        "iconPath": "static/img/home.png",
+        "selectedIconPath": "static/img/home.png"
+      },
+      {
+        "pagePath": "pages/mine/index",
+        "text": "我的",
+        "iconPath": "static/img/home.png",
+        "selectedIconPath": "static/img/home.png"
+      }
+    ]
   }
 }
