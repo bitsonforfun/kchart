@@ -3,6 +3,7 @@
  */
 
 var Api = require('../../utils/api.js');
+var Common = require('../../common/helper.js');
 const app = getApp();
 const _ = wx.T._
 
@@ -37,7 +38,8 @@ Page({
       lazyLoad: true
     },
     changePercentColor: "#259D22",
-    currencyUnit: '$'
+    labelCurrencyUnit: '$',
+    currencyUnit: 'USD'
   },
   onShareAppMessage: function (res) {
     return {
@@ -46,10 +48,25 @@ Page({
     }
   },
   onLoad: function (options) {
+    if (Common.hasToken()) {
+      this.data.currencyUnit = app.globalData.userInfo.currencyUnit
+      this.data.labelCurrencyUnit = Common.getCurrencyUnitSymbol(this.data.currencyUnit)
+    } else {
+      this.data.currencyUnit = 'USD'
+      this.data.labelCurrencyUnit = Common.getCurrencyUnitSymbol(this.data.currencyUnit)
+    }
+    this.setData({
+      currencyUnit: this.data.currencyUnit,
+      labelCurrencyUnit: this.data.labelCurrencyUnit
+    })
+    
     this.data.currencyInfo.symbol = options.symbol
     this.getBasicInfo(this.data.currencyInfo.symbol)
     this.getHistory()
     this.getCoinPairs()
+  },
+  onShow: function (options) {
+
   },
   touchHandler: function (e) {
     console.log(areaChart.getCurrentDataIndex(e));
@@ -148,27 +165,27 @@ Page({
     // });
 
     wx.navigateTo({
-      url: '../chart/index?ex=' + e.target.dataset.pair.ex + '&symbol=' + e.target.dataset.pair.symbol
+      url: '../chart/index?ex=' + e.currentTarget.dataset.pair.ex + '&symbol=' + e.currentTarget.dataset.pair.symbol
     });
   },
-  tap: function (e) {
-    for (var i = 0; i < order.length; ++i) {
-      if (order[i] === this.data.toView) {
-        this.setData({
-          toView: order[i + 1],
-          scrollTop: (i + 1) * 200
-        })
-        break
-      }
-    }
-  },
-  tapMove: function (e) {
-    this.setData({
-      scrollTop: this.data.scrollTop + 10
-    })
-  },
+  // tap: function (e) {
+  //   for (var i = 0; i < order.length; ++i) {
+  //     if (order[i] === this.data.toView) {
+  //       this.setData({
+  //         toView: order[i + 1],
+  //         scrollTop: (i + 1) * 200
+  //       })
+  //       break
+  //     }
+  //   }
+  // },
+  // tapMove: function (e) {
+  //   this.setData({
+  //     scrollTop: this.data.scrollTop + 10
+  //   })
+  // },
   getHistory: function () {
-    var api_url = Api.history_url + '/' + this.data.currencyInfo.symbol
+    var api_url = Api.history_url + '/' + this.data.currencyInfo.symbol + '?currencyUnit=' + this.data.currencyUnit;
     Api.fetchGet(api_url, (err, res) => {
       //更新数据
       this.data.currencyInfo.history = res      
@@ -181,28 +198,29 @@ Page({
     })
   },
   getCoinPairs: function () {
-    if (wx.D) {
-      
-    } else {
-      var api_url = Api.coinpair_url + '/' + this.data.currencyInfo.symbol
-      Api.fetchGet(api_url, (err, res) => {
-        //更新数据
-        this.data.currencyInfo.coinpairs = res.spiders
-        // this.setData({
-        //   currencyInfo: this.data.currencyInfo
-        // });
-        if (res.spiders.length == 0) {
-          this.setData({
-            coinpairs: null
-          });
-        } else {
-          this.setData({
-            coinpairs: this.data.currencyInfo.coinpairs
-          });
-        }
+    var api_url = Api.coinpair_url + '/' + this.data.currencyInfo.symbol
+    Api.fetchGet(api_url, (err, res) => {
+      //更新数据
+      this.data.currencyInfo.coinpairs = res.spiders
+      for (var i = 0; i < this.data.currencyInfo.coinpairs.length; i++) {
+        this.data.currencyInfo.coinpairs[i].quotesVolume24h = Common.autoRoundNumPrecision(this.data.currencyInfo.coinpairs[i].quotesVolume24h)
+        this.data.currencyInfo.coinpairs[i].quotesVolume24h = Common.localeString(this.data.currencyInfo.coinpairs[i].quotesVolume24h)
 
-      })
-    }
+        this.data.currencyInfo.coinpairs[i].quotesPrice = Common.autoRoundNumPrecision(this.data.currencyInfo.coinpairs[i].quotesPrice)
+        this.data.currencyInfo.coinpairs[i].quotesPrice = Common.localeString(this.data.currencyInfo.coinpairs[i].quotesPrice)
+      }
+
+      if (res.spiders.length == 0) {
+        this.setData({
+          coinpairs: null
+        });
+      } else {
+        this.setData({
+          coinpairs: this.data.currencyInfo.coinpairs
+        });
+      }
+
+    })
   },
   // 获取货币数据
   getBasicInfo: function (symbol) {
@@ -230,10 +248,10 @@ Page({
         }
         this.setData({
           D: wx.D,
-          currencyUnit: '￥',
+          labelCurrencyUnit: '￥',
           // labelVolume: '成交量(1个月)',
           labelVolume: '',
-          currencyUnit: '',
+          labelCurrencyUnit: '',
           label24Hour: '1个月',
           // label24Hour: '',
           exchange: exchange,
@@ -241,7 +259,7 @@ Page({
         });
       })
     } else {
-      var api_url = Api.currency_url + '/' + symbol
+      var api_url = Api.currency_url + '/' + symbol + '?currencyUnit=' + this.data.currencyUnit;
       Api.fetchGet(api_url, (err, res) => {
         //更新数据
         this.currencyToLocalString(res)

@@ -222,15 +222,15 @@
 .zan-card {
   display: flex;
   margin-left: 0;
-  padding: 5px 15px;
+  padding: 26rpx 30rpx 26rpx 30rpx;
   overflow: hidden;
   position: relative;
   font-size: 14px;
 }
 
 .zan-card__thumb {
-  width: 17px;
-  height: 17px;
+  width: 32rpx;
+  height: 32rpx;
   position:relative;
   /* margin-left: auto; */
   /* margin-right: auto; */
@@ -238,9 +238,20 @@
   background-size: cover;
 }
 
+.zan-card__arrow {
+  width: 20rpx;
+  height: 20rpx;
+  position:relative;
+  margin-left: 10rpx; 
+  margin-top: 4rpx;
+  /* margin-right: auto; */
+  overflow: hidden;
+  background-size: cover;
+}
+
 .zan-card__img {
   position: absolute;
-  top: 2px;
+  top: 0px;
   left: 0;
   right: 0px;
   bottom: 0;
@@ -258,10 +269,13 @@
 }
 
 .zan-card__detail-row {
+  font-size: 32rpx;
+  /* font-weight: bold; */
+  font-family: PingFangSC;
   overflow: hidden;
-  line-height: 20px;
-  min-height: 20px;
-  margin-bottom: 3px;
+  line-height: 32rpx;
+  min-height: 32rpx;
+  margin-bottom: 20rpx;
 }
 
 .zan-card__right-col {
@@ -271,3 +285,16 @@
 .zan-card__left-col {
   margin-right: 80px;
 }
+
+.label {
+    display: inline-block;
+    height: 32rpx;
+    width: 32rpx;
+    line-height: 32rpx;
+    /* padding: 0 10rpx; */
+    font-size: 20rpx;
+    font-family: PingFangSC;
+    border-radius: 4rpx;
+    vertical-align: middle;
+    overflow: hidden;
+  }

@@ -3,6 +3,7 @@
  */
 
 var Api = require('../../utils/api.js');
+var Common = require('../../common/helper.js');
 const _ = wx.T._
 
 var app = getApp();
@@ -121,7 +122,9 @@ Page({
     labelKOpen: _('LabelKOpen'),
     labelKCloseYesterday: _('LabelKCloseYesterday'),
     labelKVolume: _('LabelKVolume'),
-    labelKValue: _('LabelKValue')
+    labelKValue: _('LabelKValue'),
+
+    currencyUnit: 'USD'
   },
   onShareAppMessage: function (res) {
     return {
@@ -130,6 +133,18 @@ Page({
     }
   },
   onLoad: function (options) {
+    if (Common.hasToken()) {
+      this.data.currencyUnit = app.globalData.userInfo.currencyUnit
+      this.data.labelCurrencyUnit = Common.getCurrencyUnitSymbol(this.data.currencyUnit)
+    } else {
+      this.data.currencyUnit = 'USD'
+      this.data.labelCurrencyUnit = Common.getCurrencyUnitSymbol(this.data.currencyUnit)
+    }
+    this.setData({
+      currencyUnit: this.data.currencyUnit,
+      labelCurrencyUnit: this.data.labelCurrencyUnit
+    })
+
     // 从上一个页面传进参数
     this.data.ex = options.ex
     this.data.symbol = options.symbol
@@ -215,7 +230,7 @@ Page({
   tabChart: function (e) {
     this.setChartLoading()
     var type = e.target.dataset.type;
-    var api_url = Api.price_url + '?ex=' + this.data.ex + '&symbol=' + this.data.symbol + '&slice=' + type;
+    var api_url = Api.price_url + '?ex=' + this.data.ex + '&symbol=' + this.data.symbol + '&slice=' + type + '&currencyUnit=' + this.data.currencyUnit;
     this.data.tabName = type;
     // clear axis show
 
@@ -417,64 +432,7 @@ Page({
       cColor: cColor
     });
   },
-  // axisStart: function (e) {
-  //   var x = e.touches[0].x;
-  //   var y = e.touches[0].y;
-  //   // var x = e.detail.x;
-  //   // var y = e.detail.y;
-  //   this.data.isShowAxis = true;
-  //   kAxisShow.start(x, y);
-  //   this.setPrice(x);
-  // },
-  // axisMove: function (e) {
-  //   if (this.data.isShowAxis) {
-  //     var x = e.touches[0].x;
-  //     var y = e.touches[0].y;
-  //     kAxisShow.move(x, y);
-  //     this.setPrice(x);
-  //   }
-  // },
-  // axisStop: function () {
-  //   // this.data.isShowAxis = false;
-  //   // kAxisShow.stop();
-  // },
-
-  // axisStart: function (e) {
-  //   var x = e.touches[0].x;
-  //   var y = e.touches[0].y;
-  //   this.data.isShowAxis = true;
-  //   kAxisShow.start(x, y);
-  //   this.setPrice(x);
-  // },
-  // moveStart: function (e) {
-  //   var x = e.touches[0].x;
-  //   var y = e.touches[0].y;
-  //   kAxisShow.stop();
-  //   this.data.isShowAxis = false;
-  //   this.data.xStart = x
-  // },
-  // axisMove: function (e) {
-  //   var x = e.touches[0].x;
-  //   var y = e.touches[0].y;
-  //   if (this.data.isShowAxis) {
-  //     kAxisShow.move(x, y);
-  //     this.setPrice(x);
-  //   } else {
-  //     this.data.xEnd = x
-  //   }
-  // },
-  // axisStop: function () {
-  //   if (this.data.isShowAxis) {
-  //     this.data.isShowAxis = false;
-  //   } else {
-  //     var length = this.data.xEnd - this.data.xStart;
-  //     kLine.tapMove1(length);
-  //     kLineB.tapMove2(length);
-  //     kLine.draw();
-  //     kLineB.draw();
-  //   }
-  // }
-
+ 
   axisStart: function (e) {
     var x = e.touches[0].x;
     var y = e.touches[0].y;

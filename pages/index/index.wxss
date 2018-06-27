@@ -16,6 +16,19 @@
   height: 300rpx;
 }
 
+/* wx-cc begin */
+.demo {
+    display: block;
+    width: 100%;
+    height: 600rpx;
+    /* background: #f2f2f2; */
+  }
+  .demo__pic {
+    width: 200rpx;
+    height: 200rpx;
+  }
+/* wx-cc end */
+
 /* page {
   width: 100%;
   height: 100%;

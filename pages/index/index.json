@@ -1,11 +1,15 @@
 {
-  "navigationBarTitleText": "ThetA",
+  "navigationBarTitleText": "THETA",
   "usingComponents": {
     "zan-card": "../../utils/dist/card/index",
     "zan-panel": "../../utils/dist/panel/index",
     "zan-tab": "../../utils/dist/tab/index",
     "zan-loading": "../../utils/dist/loading/index",
     "zan-button": "../../utils/dist/btn/index",
-    "zan-button-group": "../../utils/dist/btn-group/index"
+    "zan-button-group": "../../utils/dist/btn-group/index",
+
+    "wxc-cc": "../../dist/packages/@minui/wxc-cc/dist/index",
+    "wxc-icon": "../../dist/packages/@minui/wxc-icon/dist/index",
+    "wxc-button": "../../dist/packages/@minui/wxc-button/dist/index"
   }
 }

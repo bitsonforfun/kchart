@@ -33,7 +33,7 @@ export default {
         "LabelMineAboutUs": "About Us"
     },
     "zh-Hans": {
-      "TabNumberOneName": "市值/涨幅",
+      "TabNumberOneName": "市值",
       "TabNumberTwoName": "自选",
       "LabelMarketCap": "市值",
       "Label24Hour": "24小时",
@@ -62,7 +62,7 @@ export default {
       "LabelKCloseYesterday": "昨",
       "LabelKVolume": "量",
       "LabelKValue": "额",
-      "LabelMineCurrencyUnitSetupDesc": "货币单位设置",
+      "LabelMineCurrencyUnitSetupDesc": "货币单位",
       "LabelMineAboutUs": "关于我们"
     }
 }

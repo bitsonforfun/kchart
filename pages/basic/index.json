@@ -3,6 +3,11 @@
   "usingComponents": {
     "zan-panel": "../../utils/dist/panel/index",
     "zan-cell": "../../utils/dist/cell/index",
-    "zan-cell-group": "../../utils/dist/cell-group/index"
+    "zan-cell-group": "../../utils/dist/cell-group/index",
+    "zan-basic-card": "../../utils/dist/basic-card/index",
+    
+    "wxc-panel": "../../dist/packages/@minui/wxc-panel/dist/index",
+    "wxc-list": "../../dist/packages/@minui/wxc-list/dist/index",
+    "wxc-icon": "../../dist/packages/@minui/wxc-icon/dist/index"
   }
 }

@@ -1,7 +1,7 @@
 <zan-panel class="panel-example">
-  <view style="padding-top:30rpx;padding-left:30rpx;padding-bottom:0;font-size:70rpx">{{ currencyUnit }} {{ currencyInfo.quotesPrice }}</view>
+  <view style="padding-top:30rpx;padding-left:30rpx;padding-bottom:0;font-size:70rpx">{{ labelCurrencyUnit }} {{ currencyInfo.quotesPrice }}</view>
   <view style="padding-top:4rpx;padding-left:30rpx;padding-bottom:0rpx;font-size:32rpx;color:{{ changePercentColor }}">{{ currencyInfo.quotesPercentChange24h }}% ({{ label24Hour }})</view>
-  <view style="padding-top:4rpx;padding-left:30rpx;padding-bottom:6rpx;font-size:26rpx;color:#A0A0A0">{{ labelVolume }} {{ currencyUnit }}{{ currencyInfo.quotesVolume24h }}</view>
+  <view style="padding-top:4rpx;padding-left:30rpx;padding-bottom:6rpx;font-size:26rpx;color:#A0A0A0">{{ labelVolume }} {{ labelCurrencyUnit }}{{ currencyInfo.quotesVolume24h }}</view>
 </zan-panel>
 
 <!-- wx chart -->
@@ -10,14 +10,49 @@
 </view>
 
 <block wx:if="{{coinpairs}}">
+  <wxc-panel title="{{ labelCoinPair }}">
+    <block wx:for="{{coinpairs}}" wx:for-item="pair" wx:key="cell-{{pair.symbol}}}}">
+      <view bindtap="open" data-pair="{{pair}}">
+        <zan-panel without-border>
+          <zan-basic-card isPercentChangePositive="{{ currency.isPercentChangePositive }}
+          card-class="test-card zan-card__thumb2"
+          thumb=""
+          price="{{ pair.quotesPrice }}"
+          title="{{ pair.ex }}  {{ pair.symbol }}"
+          rank="{{ labelCurrencyUnit }} {{  }}"
+          percentageMark="{{ }}"
+          desc="{{ pair.quotesVolume24h }} ({{ label24Hour }})"
+          status=" ">
+          </zan-basic-card>
+        </zan-panel>
+      </view>
+    </block>
+  </wxc-panel>
+</block>
+
+<!-- 
+<block wx:if="{{coinpairs}}">
+  <wxc-panel title="{{ labelCoinPair }}">
+      <view class="list-item">
+        <block wx:for="{{coinpairs}}" wx:for-item="pair" wx:key="cell-{{pair.symbol}}">
+          <view class="list-check">
+            <wxc-list bindtap="open" data-pair="{{ pair }}" class="item" title="{{ pair.ex }}, {{ pair.symbol }}" desc="{{ labelCurrencyUnit }} {{ pair.quotesPrice }}" detail="{{}}" arrow="{{false}}" mode="none"></wxc-list>
+          </view>
+        </block>
+      </view>
+  </wxc-panel>
+</block> -->
+
+<!-- 
+<block wx:if="{{coinpairs}}">
   <zan-panel class="cell-panel-demo" title="{{ labelCoinPair }}">
     <zan-cell-group>
       <block wx:for="{{coinpairs}}" wx:for-item="pair" wx:key="cell-{{pair.symbol}}">
-        <zan-cell bindtap="open" data-pair="{{ pair }}" title="{{ pair.ex }}, {{ pair.symbol }}" value="{{ }}" is-link></zan-cell>
+        <zan-cell bindtap="open" data-pair="{{ pair }}" title="{{ pair.ex }}, {{ pair.symbol }}" value="{{ labelCurrencyUnit }} {{ pair.quotesPrice }}" is-link></zan-cell>
       </block>
     </zan-cell-group>
   </zan-panel>
-</block>
+</block> -->
 
 <!-- <block wx:if="{{D}}">
   <zan-panel class="cell-panel-demo" title="价格趋势">

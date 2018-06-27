@@ -2,12 +2,30 @@
  * Created by Lipeizhao on 2018/5/28.
  */
 
+// 导入组件
 var Api = require('../../utils/api.js');
+var Common = require('../../common/helper.js');
+
+// 初始化变量
 const app = getApp();
 const _ = wx.T._
 
 Page({
-  onReady: function () {
+  /*
+   * 小程序启动时的执行顺序有可能是app初始化后执行首页的onLoad（以下称onLoad），
+   * 也有可能在app初始化完之前执行onLoad，假如在app初始化完之前执行onLoad，则
+   * 将onLoad里的首页初始化逻辑作为回调函数传给app最后回调，假如在app初始化完后执行
+   * onLoad，则按照正常逻辑在onLoad里执行首页初始化逻辑
+   */
+  onLoad: function () {
+    app.userInfoReadyCallback = () => {
+      this.pageInit()
+    }
+    if (app.globalData.essentialDone == true) {
+      this.pageInit()
+    }
+  },
+  pageInit: function () {
     wx.getSystemInfo({
       success: (res) => {
         this.setData({
@@ -16,19 +34,78 @@ Page({
       }
     })
     this.data.coin_img_url = Api.coin_img_url
+
     this.setData({
       coin_img_url: this.data.coin_img_url
     });
+
+    if (Common.hasToken()) {
+      this.data.currencyUnit = app.globalData.userInfo.currencyUnit
+      this.data.labelCurrencyUnit = Common.getCurrencyUnitSymbol(this.data.currencyUnit)
+    } else {
+      this.data.currencyUnit = 'USD'
+      this.data.labelCurrencyUnit = Common.getCurrencyUnitSymbol(this.data.currencyUnit)
+    }
+    this.setData({
+      currencyUnit: this.data.currencyUnit,
+      labelCurrencyUnit: this.data.labelCurrencyUnit
+    })
+
     // for mini
     this.getExchange()
+
+    this.data.initLock = false
+  },
+  onReady: function () {
+  },
+  onShow: function () {
+    if (this.data.initLock != true) {
+      // 清除所有数据
+      this.data.currencies = []
+      this.data.cursor = 0
+      this.data.hasMore = true
+      this.data.coinListLoading = false
+
+      this.data.myCurrencies = []
+      this.data.myCursor = 0
+      this.data.myHasMore = true
+      this.data.myCoinListLoading = false
+
+      this.setData({
+        currencies: this.data.currencies,
+        myCurrencies: this.data.myCurrencies,
+      })
+
+      // 重新获取列表数据
+      this.getExchange()
+
+      // 重新设置用户数据
+      if (app.globalData.userInfo) {
+        this.data.currencyUnit = app.globalData.userInfo.currencyUnit
+        this.data.labelCurrencyUnit = Common.getCurrencyUnitSymbol(this.data.currencyUnit)
+      } else {
+        this.data.currencyUnit = 'USD'
+        this.data.labelCurrencyUnit = Common.getCurrencyUnitSymbol(this.data.currencyUnit)
+      }
+      this.setData({
+        currencyUnit: this.data.currencyUnit,
+        labelCurrencyUnit: this.data.labelCurrencyUnit
+      })
+    }
   },
   data: {
+    // init lock
+    initLock: true,
+
+    // user
+    hasLogin: false,
+
     // icon url
     coin_img_url: '',
 
     // currency query result
     currencies: [],
-    currencyUnit: '$',
+    lableCurrencyUnit: '$',
 
     // my currency query result
     myCurrencies: [],
@@ -61,15 +138,13 @@ Page({
         id: '3',
         title: ''
       }],
-      selectedId: '1',
+      // selectedId: '1',
       scroll: false,
       height: 30
     },
     tabIndex: 1,
 
     labelMarketCap: _('LabelMarketCap')
-  },
-  onLoad: function () {
   },
   onShareAppMessage: function (res) {
     return {
@@ -92,22 +167,6 @@ Page({
       url: '../selectmine/index'
     });
   }, 
-  // tap: function (e) {
-  //   for (var i = 0; i < order.length; ++i) {
-  //     if (order[i] === this.data.toView) {
-  //       this.setData({
-  //         toView: order[i + 1],
-  //         scrollTop: (i + 1) * 200
-  //       })
-  //       break
-  //     }
-  //   }
-  // },
-  // tapMove: function (e) {
-  //   this.setData({
-  //     scrollTop: this.data.scrollTop + 10
-  //   })
-  // },
   // for mini
   getExchange: function () {
     var api_url = Api.base_url + '/exchange';
@@ -126,7 +185,7 @@ Page({
           id: '3',
           title: ''
         }],
-        selectedId: '1',
+        // selectedId: '1',
         scroll: false,
         height: 30
       }
@@ -187,8 +246,9 @@ Page({
       })
     } else {
       var that = this;
-      var api_url = Api.currency_url + '?sort=rank_asc&limit=' + countPerPage + '&start=' + cursor;
+      var api_url = Api.currency_url + '?sort=rank_asc&limit=' + countPerPage + '&start=' + cursor + '&currencyUnit=' + this.data.currencyUnit;
       Api.fetchGet(api_url, (err, res) => {
+
         //更新数据
         var count = that.data.currencies.length;
         for (var i = 0; i < res.currencies.length; i++) {
@@ -216,39 +276,57 @@ Page({
         this.data.coinListLoading = false
       })
     }
-
   },
   getMyData: function (countPerPage, cursor) {
     var that = this;
-    var token = wx.getStorageSync('token');
-    if (token) {
-      var api_url = Api.currency_url + '?sort=rank_asc&limit=' + countPerPage + '&start=' + cursor + '&onlyOptionalCurrency=true&token=' + token;
+    
+    // 若token不为空，则获取用户自选股列表，否则则提示用户登录
+    if (Common.hasToken()) {
+      var token = wx.getStorageSync("token");
+      var api_url = Api.currency_url + '?sort=rank_asc&limit=' + countPerPage + '&start=' + cursor + '&onlyOptionalCurrency=true&currencyUnit=' + this.data.currencyUnit + '&token=' + token;
       Api.fetchGet(api_url, (err, res) => {
-        var count = that.data.myCurrencies.length;
-        for (var i = 0; i < res.currencies.length; i++) {
-          if (count < that.data.myCoinListingLimit) {
-            that.currencToLocalString(res.currencies[i])
-            that.setChangePercentColor(res.currencies[i])
-            that.data.myCurrencies.push(res.currencies[i])
-            count += 1
+        if (Common.isCallSuccess(res)) {
+          var count = that.data.myCurrencies.length;
+          for (var i = 0; i < res.currencies.length; i++) {
+            if (count < that.data.myCoinListingLimit) {
+              that.currencToLocalString(res.currencies[i])
+              that.setChangePercentColor(res.currencies[i])
+              that.data.myCurrencies.push(res.currencies[i])
+              count += 1
+            }
           }
+          if (that.data.myCurrencies.length >= that.data.myCoinListingLimit) {
+            that.data.myHasMore = false;
+          }
+
+          // 更新页面模型
+          that.setData({
+            myCurrencies: that.data.myCurrencies,
+            myHasMore: that.data.myHasMore,
+            percentageMark: '%'
+          });
+
+          that.data.myCursor = that.data.myCursor + that.data.myCountPerPage;
+
+          // 防止上拉页面后重复加载
+          this.data.coinListLoading = false
+
+          // 显示自选
+          this.setData({
+            hasLogin: true
+          });
+        } else {
+          // 隐藏自选
+          this.setData({
+            hasLogin: false
+          });
         }
-        if (that.data.myCurrencies.length >= that.data.myCoinListingLimit) {
-          that.data.myHasMore = false;
-        }
-
-        // 更新页面模型
-        that.setData({
-          myCurrencies: that.data.myCurrencies,
-          myHasMore: that.data.myHasMore,
-          percentageMark: '%'
-        });
-
-        that.data.myCursor = that.data.myCursor + that.data.myCountPerPage;
-
-        // 防止上拉页面后重复加载
-        this.data.coinListLoading = false
       })
+    } else {
+      // 隐藏自选
+      this.setData({
+        hasLogin: false
+      });
     }
   },
   currencToLocalString: function (currency) {

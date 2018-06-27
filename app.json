@@ -8,27 +8,27 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "backgroundColor": "#eee",
-    "navigationBarBackgroundColor": "#eee",
-    "navigationBarTextStyle": "black"
+    "backgroundColor": "#ffffff",
+    "navigationBarBackgroundColor": "#061C30",
+    "navigationBarTextStyle": "white"
   },
   "tabBar": {
     "color": "#666666",
-    "selectedColor": "#ff4a4a",
+    "selectedColor": "#1A7FE9",
     "borderStyle": "white",
     "backgroundColor": "#ffffff",
     "list": [
       {
         "pagePath": "pages/index/index",
         "text": "行情",
-        "iconPath": "static/img/home.png",
-        "selectedIconPath": "static/img/home.png"
+        "iconPath": "static/img/index_disable.png",
+        "selectedIconPath": "static/img/index_enable.png"
       },
       {
         "pagePath": "pages/mine/index",
         "text": "我的",
-        "iconPath": "static/img/home.png",
-        "selectedIconPath": "static/img/home.png"
+        "iconPath": "static/img/mine_disable.png",
+        "selectedIconPath": "static/img/mine_enable.png"
       }
     ]
   }

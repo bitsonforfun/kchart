@@ -1,65 +1,73 @@
 <view>
-  <zan-tab list="{{ tab.list }}" selected-id="{{ tab.selectedId }}" bindtabchange="tabChange" />
+  <zan-tab list="{{ tab.list }}" selected-id="{{ tabIndex }}" bindtabchange="tabChange" />
   <block wx:if="{{ tabIndex == 1 }}">
     <scroll-view scroll-y="true" lower-threshold="200" style="height:{{ winH }}px;" bindscrolltolower="loadMore" bindscrolltoupper="refesh">
       <block wx:for="{{currencies}}" wx:for-item="currency" wx:key="{{currency.id}}">
         <view bindtap="open" data-currency="{{currency}}">
           <zan-panel without-border>
-            <zan-card isPercentChangePositive="{{ currency.isPercentChangePositive }}
-            card-class=" test-card zan-card__thumb2 "
-            thumb="{{ coin_img_url }}/{{ currency.symbol }}.png "
-            price="{{ currencyUnit }} {{ currency.quotesPrice }} "
-            title="{{ currency.name }} ({{ currency.symbol }}) "
-            rank="{{ currency.quotesPercentChange24h }} "
-            percentageMark="{{ percentageMark }} "
-            desc="{{ labelMarketCap }} #{{ currency.rank }} ${{ currency.quotesMarketCap }} "
-            status=" ">
+            <zan-card isPercentChangePositive="{{ currency.isPercentChangePositive }}"
+            card-class=" test-card zan-card__thumb2"
+            thumb="{{ coin_img_url }}/{{ currency.symbol }}.png"
+            price="{{ labelCurrencyUnit }}{{ currency.quotesPrice }}"
+            title="{{ currency.name }} ({{ currency.symbol }})"
+            rank="{{ currency.quotesPercentChange24h }}"
+            percentageMark="{{ percentageMark }}"
+            desc="{{ labelCurrencyUnit }}{{ currency.quotesMarketCap }}"
+            status=""
+            text="{{ currency.rank }}"
+            arrowUpSrc="../../../static/img/arrow_up.png"
+            arrowDownSrc="../../../static/img/arrow_down.png">
             </zan-card>
           </zan-panel>
         </view>
       </block>
-      <view wx:if="{{ hasMore }} ">
-        <zan-loading type="spinner " class="loading-stage " color="black " style="width:100%; "></zan-loading>
+      <view wx:if="{{ hasMore }}">
+        <zan-loading type="spinner" class="loading-stage" color="black" style="width:100%;"></zan-loading>
       </view>
     </scroll-view>
   </block>
 
-  <block wx:elif="{{ tabIndex == 2 }} ">
-    <scroll-view scroll-y="true" lower-threshold="200" style="height:{{ winH }}px;" bindscrolltolower="myLoadMore" bindscrolltoupper="refesh">
-      <zan-panel title="">
-        <zan-button-group>
-          <!-- <zan-button
-            open-type="getPhoneNumber"
-            bind:getphonenumber="getPhoneNumber"
-          >获取电话</zan-button>
-          <zan-button type="primary">确认付款</zan-button>
-          <zan-button type="danger">确认付款</zan-button> -->
-          <zan-button size="large" bindtap="openSelectMyCurrencies">+</zan-button>
-        </zan-button-group>
-      </zan-panel>
-      <block wx:for="{{myCurrencies}}" wx:for-item="currency" wx:key="{{currency.id}}">
-        <view bindtap="myOpen" data-currency="{{currency}}">
-          <zan-panel without-border>
-            <zan-card isPercentChangePositive="{{ currency.isPercentChangePositive }}
-              card-class=" test-card zan-card__thumb2 "
-              thumb="{{ coin_img_url }}/{{ currency.symbol }}.png "
-              price="{{ currencyUnit }} {{ currency.quotesPrice }} "
-              title="{{ currency.name }} ({{ currency.symbol }}) "
-              rank="{{ currency.quotesPercentChange24h }} "
-              percentageMark="{{ percentageMark }} "
-              desc="{{ labelMarketCap }} #{{ currency.rank }} ${{ currency.quotesMarketCap }} "
-              status=" ">
-              </zan-card>
+  <block wx:elif="{{ tabIndex==2 }}">
+    <block wx:if="{{ hasLogin }}">
+      <scroll-view scroll-y="true" lower-threshold="200" style="height:{{ winH }}px;" bindscrolltolower="myLoadMore" bindscrolltoupper="refesh">
+        <zan-panel title="">
+          <zan-button-group>
+            <zan-button size="large" bindtap="openSelectMyCurrencies">+</zan-button>
+          </zan-button-group>
+        </zan-panel>
+        <block wx:for="{{myCurrencies}}" wx:for-item="currency" wx:key="{{currency.id}}">
+          <view bindtap="myOpen" data-currency="{{currency}}">
+            <zan-panel without-border>
+              <zan-card isPercentChangePositive="{{ currency.isPercentChangePositive }}"
+                card-class=" test-card zan-card__thumb2"
+                thumb="{{ coin_img_url }}/{{ currency.symbol }}.png"
+                price="{{ labelCurrencyUnit }}{{ currency.quotesPrice }}"
+                title="{{ currency.name }} ({{ currency.symbol }})"
+                rank="{{ currency.quotesPercentChange24h }}"
+                percentageMark="{{ percentageMark }}"
+                desc="{{ labelCurrencyUnit }}{{ currency.quotesMarketCap }}"
+                status=""
+                text="{{ currency.rank }}"
+                arrowUpSrc="../../../static/img/arrow_up.png"
+                arrowDownSrc="../../../static/img/arrow_down.png">
+              </zan-card> 
             </zan-panel>
           </view>
         </block>
-      <view wx:if="{{ myHasMore }} ">
-        <zan-loading type="spinner " class="loading-stage " color="black " style="width:100%; "></zan-loading>
-      </view>
-    </scroll-view>
+        <view wx:if="{{ myHasMore }}">
+          <zan-loading type="spinner" class="loading-stage" color="black" style="width:100%;"></zan-loading>
+        </view>
+      </scroll-view>
+    </block>
+    <block wx:else>
+      <wxc-cc class="demo">
+        <wxc-button plain="{{true}}" size="big" type="disabled" btnStyle="">请先登录
+          <!-- <wxc-icon color="#fff" type="arrow-right"></wxc-icon> -->
+        </wxc-button>
+      </wxc-cc>
+    </block>
   </block>
 
   <block wx:else>
   </block>
-  
 </view>

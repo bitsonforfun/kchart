@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "ThetA",
+  "navigationBarTitleText": "THETA",
   "usingComponents": {
     "zan-card": "../../utils/dist/card/index",
     "zan-tab": "../../utils/dist/tab/index",
@@ -9,6 +9,10 @@
     "zan-actionsheet": "../../utils/dist/actionsheet/index",
     "zan-row": "../../utils/dist/row/index",
     "zan-col": "../../utils/dist/col/index",
-    "zan-panel": "../../utils/dist/panel/index"
+    "zan-panel": "../../utils/dist/panel/index",
+
+    "wxc-list": "../../dist/packages/@minui/wxc-list/dist/index",
+    "wxc-icon": "../../dist/packages/@minui/wxc-icon/dist/index",
+    "wxc-button": "../../dist/packages/@minui/wxc-button/dist/index"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "ThetA",
+  "navigationBarTitleText": "THETA",
   "usingComponents": {
     "zan-card": "../../utils/dist/card/index",
     "zan-tab": "../../utils/dist/tab/index",

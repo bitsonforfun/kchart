@@ -9,7 +9,11 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@minui/wxc-button": "^1.0.2",
+    "@minui/wxc-cc": "^1.0.4",
+    "@minui/wxc-label": "^1.0.5",
     "@minui/wxc-list": "^1.0.1",
+    "@minui/wxc-panel": "^1.0.1",
     "@minui/wxc-search": "^1.0.1",
     "@minui/wxc-toast": "^1.0.9",
     "babel-plugin-syntax-export-extensions": "^6.13.0",

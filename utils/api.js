@@ -1,6 +1,6 @@
 // for testing
-// var host = '192.168.31.46:6060'
-var host = '192.168.3.101:6060'
+var host = '192.168.31.46:6060'
+// var host = '192.168.3.101:6060'
 // var host = '172.128.11.10:6060' // sugar
 
 var image_host = 'thetacdn.meinvjpg.com'

@@ -18,7 +18,14 @@ Component({
       type: Boolean,
       value: false
     },
+    isPercentChangePositive: {
+      type: Boolean,
+      value: false
+    },
     percentageMark: String,
+    arrowUpSrc: String,
+    arrowDownSrc: String,
+    text: String,
     thumb: String,
     price: String,
     title: String,

@@ -1,32 +1,49 @@
 <view class="zan-card card-class">
   <!-- 左侧图片 -->
-  
+
 
   <!-- 右侧详情 -->
   <view class="zan-card__detail">
     <slot wx:if="{{ useDetailSlot }}" name="detail-slot"></slot>
     <block wx:else>
-      <view class="zan-card__detail-row">
+      <!-- line one  -->
+      <view class="zan-card__detail-row" style='line-height:32rpx;'>
         <view class="zan-card__right-col">{{ price }}</view>
 
         <view style='position:relative'>
-          <view class="zan-card__thumb" style='float:left'>
-            <image class="zan-card__img"
-              src="{{ thumb }}"
-              mode="aspectFit"
-            ></image>
+          <view class="zan-card__thumb label" style="float: left; background-color: {{isPercentChangePositive ? '#0ebf64' : '#e85b42'}}; color: #ffffff; text-align: center;">
+            <!-- <view class="zan-card__thumb label" style="float: left;border: 1px solid #0ebf64; background-color: #0ebf64; color: #ffffff; text-align: center;"> -->
+            {{text ? text : ''}}
           </view>
-          <text style='position:relative;float:left;margin-left:5px'>{{ title }}</text>
+
+          <!-- <view class="zan-card__thumb" style='float:left'>
+          <image class="zan-card__img"
+            src="{{ thumb }}"
+            mode="aspectFit"
+          ></image>
+        </view> -->
+          <view style='position: relative;float: left;margin-left: 20rpx;line-height: 32rpx;margin-top:0rpx'>{{ title }}</view>
+          <!-- <text style='position: relative;float: left;margin-left: 20rpx;line-height: 32rpx'>{{ title }}</text> -->
         </view>
         <!-- <view class="zan-card__left-col zan-ellipsis--l2">
           {{ title }}
         </view> -->
       </view>
 
-      <view class="zan-card__detail-row" style='margin-bottom:0px'>
-        <view wx:if="{{ rank && (isPercentChangePositive == true)}}" class="zan-card__right-col" style='color:#DC143C'> +{{ rank }}{{ percentageMark }}</view>
-        <view wx:if="{{ rank && (isPercentChangePositive == false)}}" class="zan-card__right-col" style='color:#259D22'> {{ rank }}{{ percentageMark }}</view>
-        <view wx:if="{{ desc }}" class="zan-card__left-col zan-c-gray-darker" style='font-size:12px;margin-left:1px'>
+      <!-- line two  -->
+      <view class="zan-card__detail-row" style='min-height:26rpx;line-height:26rpx;font-size:26rpx;margin-bottom:0px'>
+        <view wx:if="{{ rank && (isPercentChangePositive == true)}}" class="zan-card__right-col" style='color:#259D22'> +{{ rank }}{{ percentageMark }}
+          <view class="zan-card__arrow" style='float:right'>
+            <image class="zan-card__img" src="{{ arrowUpSrc }}" mode="aspectFit"></image>
+          </view>
+        </view>
+        <view wx:if="{{ rank && (isPercentChangePositive == false)}}" class="zan-card__right-col" style='color:#DC143C'> {{ rank }}{{ percentageMark }}
+          <view class="zan-card__arrow" style='float:right'>
+            <image class="zan-card__img" src="{{ arrowDownSrc }}" mode="aspectFit"></image>
+          </view>
+        </view>
+
+        <view wx:if="{{ desc }}" class="zan-card__left-col zan-c-gray-darker" style='margin-left:52rpx'>
           {{ desc }}
         </view>
 
