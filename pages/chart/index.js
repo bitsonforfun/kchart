@@ -128,7 +128,7 @@ Page({
   },
   onShareAppMessage: function (res) {
     return {
-      title: '行情查询',
+      title: '价格列表',
       path: 'pages/chart/index?ex=' + this.data.ex + '&symbol=' + this.data.symbol
     }
   },
@@ -351,7 +351,7 @@ Page({
   },
   numFormat: function (value, symbol) {
     var obj = {
-      symbol: symbol || "",    //货币类型  
+      symbol: symbol || "",    //类型  
       int: undefined,    //整数位  
       dec: undefined,  //小数位  
       targ: "",          //正负  

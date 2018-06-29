@@ -7,8 +7,7 @@
       <view class="text">
         <text wx:if="{{userInfoLocal.nickName}}">{{userInfoLocal.nickName}}</text>
         <view class="button-small-wrap">
-          <wxc-button wx:if="{{ !userInfoLocal.nickName }}" open-type="getUserInfo" bindgetuserinfo="toLogin" type="disabled" btnStyle="width: 130rpx; height: 70rpx;border-radius: 66rpx;color: #fff;">未登录
-              <wxc-icon color="#fff" type="arrow-right"></wxc-icon>
+          <wxc-button wx:if="{{ !userInfoLocal.nickName }}" plain="true" open-type="getUserInfo" bindgetuserinfo="toLogin" type="disabled" btnStyle="width: 130rpx; height: 70rpx;border-radius: 66rpx;color: #fff;border: 0px;">点击登录
           </wxc-button>
         </view>
 
@@ -16,34 +15,22 @@
     </view>
   </view>
 
-  <!-- <zan-panel class="cell-panel-demo" title="{{ }}">
-    <zan-cell-group>
-      <zan-cell bindtap="openCurrencyUnitsheet" title="{{ labelCurrencyUnit }}" value="{{ currencyUnit }}" is-link></zan-cell>
-      <zan-cell bindtap="onAboutUs" title="{{ aboutUs }}" value="{{ }}" is-link></zan-cell>
-    </zan-cell-group>
-  </zan-panel>
-  <zan-panel title="">
-    <zan-row>
-      <zan-col col="2" col-class="custom-zan-col"> </zan-col>
-      <zan-col col="20" col-class="custom-zan-col">ID: {{ userId }}</zan-col>
-      <zan-col col="2" col-class="custom-zan-col"> </zan-col>
-    </zan-row>
-  </zan-panel> -->
-
   <view class="list-wrap">
     <view class="list-item">
-      <block wx:if="{{ hasLogin }}">
-        <wxc-list title="{{ labelCurrencyUnit }}" desc="{{currencyUnit}}" mode="{{}}" bindtap="openCurrencyUnitsheet" src="https://s10.mogucdn.com/mlcdn/c45406/171011_0acg74g776ig2459c1c6gkge07hch_40x40.png">
+      <block wx:if="{{ !D }}">
+        <block wx:if="{{ hasLogin }}">
+          <!-- <wxc-list title="{{ labelCurrencyUnit }}" desc="{{currencyUnit}}" mode="{{}}" bindtap="openCurrencyUnitsheet" src="https://s10.mogucdn.com/mlcdn/c45406/171011_0acg74g776ig2459c1c6gkge07hch_40x40.png">
+          </wxc-list> -->
+          <wxc-list title="{{ labelCurrencyUnit }}" desc="{{currencyUnit}}" mode="{{}}" bindtap="openCurrencyUnitsheet" src="../../../../../static/img/exchange.png">
+          </wxc-list>
+        </block>
+      
+        <!-- <wxc-list title="{{ aboutUs }}" desc="{{}}" mode="{{'none'}}" bindtap="onAboutUs" src="https://s10.mogucdn.com/mlcdn/c45406/170603_55gkg003el4k2jbg2d2ieh030fjcf_38x38.png">
+        </wxc-list> -->
+        <wxc-list title="{{ aboutUs }}" desc="{{}}" mode="{{'none'}}" bindtap="onAboutUs" src="../../../../../static/img/mine.png">
         </wxc-list>
       </block>
-      <wxc-list title="{{ aboutUs }}" desc="{{}}" mode="{{'none'}}" bindtap="onAboutUs" src="https://s10.mogucdn.com/mlcdn/c45406/170603_55gkg003el4k2jbg2d2ieh030fjcf_38x38.png">
-      </wxc-list>
     </view>
-
-    <!-- <view class="list-item">
-      <wxc-list class="item" icon="help" icon-color="#69A0DD" title="客服与帮助" _pid="{{_pid}}"></wxc-list>
-      <wxc-list class="item" icon="feedback" icon-color="#69A0DD" mode="none" title="意见反馈" _pid="{{_pid}}"></wxc-list>
-    </view> -->
   </view>
 
   <zan-actionsheet show="{{ show }}" actions="{{ actions }}" cancel-text="{{  }}" cancel-with-mask="{{ cancelWithMask }}" bind:cancel="closeCurrencyUnitsheet" bind:actionclick="clickSelectCurrencyUnit" mask-class="tiny" />

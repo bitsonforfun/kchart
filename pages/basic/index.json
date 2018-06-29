@@ -8,6 +8,7 @@
     
     "wxc-panel": "../../dist/packages/@minui/wxc-panel/dist/index",
     "wxc-list": "../../dist/packages/@minui/wxc-list/dist/index",
-    "wxc-icon": "../../dist/packages/@minui/wxc-icon/dist/index"
+    "wxc-icon": "../../dist/packages/@minui/wxc-icon/dist/index",
+    "wxc-flex": "../../dist/packages/@minui/wxc-flex/dist/index"
   }
 }

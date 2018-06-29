@@ -44,10 +44,50 @@ function autoRoundNumPrecision(value) {
 
 function localeString(value) {
   if (value) {
-    var tmp = value.toLocaleString()
-    return tmp
+    return value.toLocaleString()
   }
-  // return value && value.toLocaleString()
+}
+
+function numFormat (value, symbol) {
+  var obj = {
+    symbol: symbol || "",
+    int: undefined,
+    dec: undefined,
+    targ: "",
+    times: ['', '万', '亿', '万亿', '亿亿']
+  }
+  value = String(value);
+  var reg = /^-?\d+\.?\d+$/;
+  if (!reg.test(value)) {
+    return false;
+  }
+
+  if (value[0] == "-") {
+    obj.targ = "-";
+    value = value.substring(1, value.length)
+  }
+
+  var times = 0;
+  value = Number(value);
+  while (value > 10000) {
+    value = value / 10000;
+    times++;
+  }
+
+  value = value.toFixed(1)
+
+  var arr = String(value).split(".")
+  obj.dec = arr[1];
+  obj.int = arr[0];
+  if (obj.int.length > 3) {
+    obj.int = obj.int.replace(/(.{1})/, '$1,')
+  }
+  return {
+    number: obj.symbol + obj.targ + obj.int + "." + obj.dec,
+    suffix: obj.times[times]
+  }
+
+  // return obj.symbol + obj.targ + obj.int + "." + obj.dec + obj.times[times];
 }
 
 module.exports = {
@@ -55,6 +95,7 @@ module.exports = {
   isCallSuccess: isCallSuccess,
   getCurrencyUnitSymbol: getCurrencyUnitSymbol,
   autoRoundNumPrecision: autoRoundNumPrecision,
-  localeString: localeString
+  localeString: localeString,
+  numFormat: numFormat,
 }
 

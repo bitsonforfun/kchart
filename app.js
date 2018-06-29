@@ -13,24 +13,30 @@ wx.T = T
 
 /* 
   ===== 本地存储 =====
-  * sessionId
+  * sessionId: string
     从服务器端获取到的会话标识
 
-  * token
+  * token: string
     用户token，每次调用服务器端服务需携带token
 
   ===== 全局变量 =====
-  * userInfo
+  * userInfo: object
     从服务端获取到的用户信息
   
-  * userInfoLocal
+  * userInfoLocal: object
     从微信服务器获取到的用户信息
 
-  * currencyUnits
-    货币服务器端单位列表
+  * currencyUnits: list
+    服务器端单位列表
 
-  * essentialDone
+  * essentialDone: bool
     判断app是否已经将初始化完成必须项目
+
+  * currencyUnitRefreshed: bool
+    判断是否改变
+
+  * myCurrencyRefreshed: bool
+    判断是否改变
  */
 
 //app.js
@@ -48,11 +54,12 @@ App({
             var sessionId = res.data.session_id;
             var userId = res.data.user_id;
             wx.setStorageSync('sessionId', sessionId)
+            this.globalData.currencyUnitRefreshed = false
+            this.globalData.myCurrencyRefreshed = false
 
             // （无需token）获取单位列表，并保存为全局变量
             var api_url = Api.currency_unit_url;
             Api.fetchGet(api_url, (err, res) => {
-              console.log('正常获取货币单位列表');
               // 必须项目已经初始化完成
               this.globalData.currencyUnits = res.currency_units
               this.globalData.essentialDone = true

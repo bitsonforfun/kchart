@@ -23,12 +23,20 @@ Page({
     show: false,
     hasLogin: false,
     cancelWithMask: true,
-    userInfoLocal: null
+    userInfoLocal: null,
+
+    D: true,
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    // for mini
+    this.data.D = wx.D
+    this.setData({
+      D: this.data.D,
+    });
+    
     let that = this
     if (Common.hasToken()) {
       wx.getUserInfo({
@@ -169,6 +177,8 @@ Page({
                 } else {
                   wx.setStorageSync('token', null)
                 }
+                // 刷新页面
+                app.globalData.currencyUnitRefreshed = true
 
                 // 根据获取到的所有信息更新页面模型
                 this.setData({
@@ -184,34 +194,7 @@ Page({
         }
       }
     })
-
-    
-
-    // var userinfo = e.detail.userInfo;
-    // var sessionId = wx.getStorageSync('sessionId');
-    // var api_url = Api.token_url + '?sessionId=' + sessionId;
-    // var data = {
-    //   nickName: userinfo.nickName,
-    //   avatarUrl: userinfo.avatarUrl,
-    //   gender: userinfo.gender,
-    //   country: userinfo.country,
-    //   province: userinfo.province,
-    //   city: userinfo.city,
-    //   language: userinfo.language,
-    // }
-    // Api.fetchPost(api_url, data, (err, res) => {
-    //   var token = res.data;
-    //   // save token for later use
-    //   wx.setStorageSync('token', token)
-
-    //   this.setData({
-    //     hasLogin: true,
-    //     userInfoLocal: userinfo,
-    //     currencyUnit: null
-    //   })
-    // })
   },
-  // 货币单位选择弹层
   openCurrencyUnitsheet() {
     var api_url = Api.currency_unit_url;
     Api.fetchGet(api_url, (err, res) => {
@@ -251,10 +234,10 @@ Page({
       "key": "currencyUnit",
       "value": currencyUnit.name
     }
-
     Api.fetchPut(api_url, data, (err, res) => {
       var currencyUnit = res.data;
       app.globalData.userInfo.currencyUnit = currencyUnit
+      app.globalData.currencyUnitRefreshed = true
       this.setData({
         currencyUnit: currencyUnit,
         [`show`]: false,

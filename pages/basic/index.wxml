@@ -1,10 +1,135 @@
-<zan-panel class="panel-example">
+<wxc-flex class="wrap" dir="top">
+    <wxc-flex class="wrap" main="start">
+      <block wx:if="{{!D}}">
+        <view class="basic-thumb">
+          <image class="basic-img" src="{{ coin_img_url }}/{{ currencyInfo.symbol }}.png" mode="aspectFit"></image>
+        </view>
+      </block>
+      <view class="basic-price">{{ labelCurrencyUnit }}{{ currencyInfo.quotesPrice }}</view>
+    </wxc-flex>
+    <block wx:if="{{!D}}">
+    <view class="gap-gray-2"></view>
+    <wxc-flex class="wrap" main="start">
+      <wxc-flex class="cell-trade-info-one" dir="top">
+        <view class="label-trade-info">{{ labelPercentChange }}</view>
+        <wxc-flex class="wrap" main="start">
+          <block wx:if="{{isPercentUp}}">
+            <view class="text-trade-info green">{{ currencyInfo.quotesPercentChange24h }}%</view>
+            <view class="basic-arrow">
+              <image class="basic-img" src="../../static/img/arrow_up.png" mode="aspectFit"></image>
+            </view>
+          </block>
+          <block wx:else>
+            <view class="text-trade-info red">{{ currencyInfo.quotesPercentChange24h }}%</view>
+            <view class="basic-arrow">
+              <image class="basic-img" src="../../static/img/arrow_down.png" mode="aspectFit"></image>
+            </view>
+          </block>
+        </wxc-flex>
+      </wxc-flex>
+      <wxc-flex class="cell-trade-info-two" dir="top">
+        <view class="label-trade-info">{{ labelVolume }}</view>
+        <wxc-flex class="wrap" main="start">
+          <view class="text-trade-info">{{ currencyInfo.quotesVolumeInCount24h }}</view>
+          <view class="text-trade-info-sub">{{ currencyInfo.volumeInCount24hSuffix }}</view>
+        </wxc-flex>
+      </wxc-flex>
+      <wxc-flex class="cell-trade-info-three" dir="top">
+        <view class="label-trade-info">{{ labelVolume2 }}</view>
+        <wxc-flex class="wrap" main="start">
+          <view class="text-trade-info">{{ currencyInfo.quotesVolume24h }}</view>
+          <view class="text-trade-info-sub">{{ currencyInfo.volumeSuffix }}</view>
+        </wxc-flex>
+      </wxc-flex>
+    </wxc-flex>
+    <view class="gap-gray-2"></view>
+    <view class="gap-white"></view>
+  </block>
+  <view class="container3" style=''>
+    <canvas canvas-id="areaCanvas" class="canvas" bindtouchstart="touchHandler"></canvas>
+  </view>
+  <block wx:if="{{D}}">
+    <wxc-flex class="wrap" dir="top">
+      <view style="margin-top: 30rpx; margin-left: 30rpx; font-family: PingFangSC;font-size: 36rpx;border-radius: 12rpx;border: 2px solid #000000; width:180rpx;padding-left:24rpx">地区介绍：</view>
+      <view style="margin-top: 15rpx; margin-left: 30rpx; font-family: SimSun;font-size: 28rpx;color: #667C88">{{ currencyInfo.websiteSlug }}</view>
+    </wxc-flex>
+  </block>
+  <block wx:else>
+    <view class="gap-white"></view>
+    <view class="gap-gray-10"></view>
+
+    <wxc-flex class="" dir="top">
+      <wxc-flex class="" main="start">
+        <view class="basic-icon">
+          <image class="basic-img" src="../../static/img/pair.png" mode="aspectFit"></image>
+        </view>
+        <view class="label-basic">{{ labelCoinPair }}</view>
+      </wxc-flex>
+
+      <block wx:for="{{coinpairs}}" wx:for-item="pair" wx:key="cell-{{pair.symbol}}}}">
+        <view class="gap-gray-2"></view>
+        <wxc-flex class="" main="between" bindclick="open" data-pair="{{pair}}">
+          <wxc-flex class="pair-left" dir="top">
+            <view class="pair-left-top">{{ pair.ex }} {{ pair.symbol }}</view>
+            <view class="pair-left-bottom">{{ labelVolume }} {{ pair.quotesVolume24h }}</view>
+          </wxc-flex>
+          <wxc-flex class="pair-right" dir="top">
+            <view class="pair-right-top">{{ pair.quotesPrice }}</view>
+            <view></view>
+          </wxc-flex>
+        </wxc-flex>
+      </block> 
+    </wxc-flex>
+    <view class="gap-gray-10"></view>
+
+    <wxc-flex class="" dir="top">
+      <wxc-flex class="" main="start">
+        <view class="basic-icon">
+          <image class="basic-img" src="../../static/img/stat.png" mode="aspectFit"></image>
+        </view>
+        <view class="label-basic">{{ labelStats }}</view>
+      </wxc-flex>
+      <view class="gap-gray-2"></view>
+      <wxc-flex class="stat" main="between">
+        <view class="text-stat">{{ labelRank }}</view>
+        <view class="text-stat">{{ currencyInfo.rank?currencyInfo.rank:'-' }}</view>
+      </wxc-flex>
+
+      <view class="gap-gray-2"></view>
+      <wxc-flex class="stat" main="between">
+        <view class="text-stat">{{ labelMarketCap }}</view>
+        <view class="text-stat">{{ currencyInfo.quotesMarketCap ? currencyInfo.quotesMarketCap:'-'}}</view>
+      </wxc-flex>
+
+      <view class="gap-gray-2"></view>
+      <wxc-flex class="stat" main="between">
+        <view class="text-stat">{{ labelCirculatingSupply }}</view>
+        <view class="text-stat">{{ currencyInfo.circulatingSupply?currencyInfo.circulatingSupply:'-' }}</view>
+      </wxc-flex>
+
+      <view class="gap-gray-2"></view>
+      <wxc-flex class="stat" main="between">
+        <view class="text-stat">{{ labelTotalSupply }}</view>
+        <view class="text-stat">{{ currencyInfo.totalSupply?currencyInfo.totalSupply:'-' }}</view>
+      </wxc-flex>
+
+      <view class="gap-gray-2"></view>
+      <wxc-flex class="stat" main="between">
+        <view class="text-stat">{{ labelMaxSupply }}</view>
+        <view class="text-stat">{{ currencyInfo.maxSupply?currencyInfo.maxSupply:'-' }}</view>
+      </wxc-flex>
+    </wxc-flex>
+  </block>
+</wxc-flex>
+
+
+
+<!-- <zan-panel class="panel-example">
   <view style="padding-top:30rpx;padding-left:30rpx;padding-bottom:0;font-size:70rpx">{{ labelCurrencyUnit }} {{ currencyInfo.quotesPrice }}</view>
   <view style="padding-top:4rpx;padding-left:30rpx;padding-bottom:0rpx;font-size:32rpx;color:{{ changePercentColor }}">{{ currencyInfo.quotesPercentChange24h }}% ({{ label24Hour }})</view>
   <view style="padding-top:4rpx;padding-left:30rpx;padding-bottom:6rpx;font-size:26rpx;color:#A0A0A0">{{ labelVolume }} {{ labelCurrencyUnit }}{{ currencyInfo.quotesVolume24h }}</view>
 </zan-panel>
 
-<!-- wx chart -->
 <view class="container3" style=''>
   <canvas canvas-id="areaCanvas" class="canvas" bindtouchstart="touchHandler"></canvas>
 </view>
@@ -21,7 +146,7 @@
           title="{{ pair.ex }}  {{ pair.symbol }}"
           rank="{{ labelCurrencyUnit }} {{  }}"
           percentageMark="{{ }}"
-          desc="{{ pair.quotesVolume24h }} ({{ label24Hour }})"
+          desc="{{ labelVolume }} {{ pair.quotesVolume24h }}"
           status=" ">
           </zan-basic-card>
         </zan-panel>
@@ -29,38 +154,6 @@
     </block>
   </wxc-panel>
 </block>
-
-<!-- 
-<block wx:if="{{coinpairs}}">
-  <wxc-panel title="{{ labelCoinPair }}">
-      <view class="list-item">
-        <block wx:for="{{coinpairs}}" wx:for-item="pair" wx:key="cell-{{pair.symbol}}">
-          <view class="list-check">
-            <wxc-list bindtap="open" data-pair="{{ pair }}" class="item" title="{{ pair.ex }}, {{ pair.symbol }}" desc="{{ labelCurrencyUnit }} {{ pair.quotesPrice }}" detail="{{}}" arrow="{{false}}" mode="none"></wxc-list>
-          </view>
-        </block>
-      </view>
-  </wxc-panel>
-</block> -->
-
-<!-- 
-<block wx:if="{{coinpairs}}">
-  <zan-panel class="cell-panel-demo" title="{{ labelCoinPair }}">
-    <zan-cell-group>
-      <block wx:for="{{coinpairs}}" wx:for-item="pair" wx:key="cell-{{pair.symbol}}">
-        <zan-cell bindtap="open" data-pair="{{ pair }}" title="{{ pair.ex }}, {{ pair.symbol }}" value="{{ labelCurrencyUnit }} {{ pair.quotesPrice }}" is-link></zan-cell>
-      </block>
-    </zan-cell-group>
-  </zan-panel>
-</block> -->
-
-<!-- <block wx:if="{{D}}">
-  <zan-panel class="cell-panel-demo" title="价格趋势">
-    <zan-cell-group>
-      <zan-cell bindtap="open" data-pair="{{ exchange }}" title="{{ exName }}" value="{{ }}" is-link></zan-cell>
-    </zan-cell-group>
-  </zan-panel>
-</block> -->
 
 <block wx:if="{{!D}}">
   <zan-panel title="{{ labelStats }}" class="panel-example">
@@ -72,4 +165,4 @@
       <zan-cell title="{{ labelMaxSupply }}" label="" value="{{ currencyInfo.maxSupply?currencyInfo.maxSupply:'-' }}"></zan-cell>
     </zan-cell-group>
   </zan-panel>
-</block>
+</block> -->

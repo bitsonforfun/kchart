@@ -4,8 +4,10 @@ export default {
         "TabNumberTwoName": "My Currency",
         "LabelMarketCap": "Market Cap",
         "Label24Hour": "24h",
+        "LabelPercentChange": "change(24h)",
         "LabelVolume": "volume(24h)",
-        "LabelCoinPair": "COIN PAIR",
+        "LabelVolume2": "volume2(24h)",
+        "LabelCoinPair": "PAIR",
         "LabelStats": "STATS",
         "LabelRank": "Rank",
         "LabelCirculatingSupply": "Circulating Supply",
@@ -37,8 +39,10 @@ export default {
       "TabNumberTwoName": "自选",
       "LabelMarketCap": "市值",
       "Label24Hour": "24小时",
-      "LabelVolume": "成交量(24小时)",
-      "LabelCoinPair": "币对",
+      "LabelPercentChange": "变化率(24h)",
+      "LabelVolume": "成交量(24h)",
+      "LabelVolume2": "成交额(24h)",
+      "LabelCoinPair": "转换",
       "LabelStats": "综合信息",
       "LabelRank": "排名",
       "LabelCirculatingSupply": "流通量",
@@ -62,7 +66,7 @@ export default {
       "LabelKCloseYesterday": "昨",
       "LabelKVolume": "量",
       "LabelKValue": "额",
-      "LabelMineCurrencyUnitSetupDesc": "货币单位",
+      "LabelMineCurrencyUnitSetupDesc": "单位",
       "LabelMineAboutUs": "关于我们"
     }
 }

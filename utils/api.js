@@ -1,5 +1,5 @@
 // for testing
-var host = '192.168.31.46:6060'
+// var host = '192.168.31.46:6060'
 // var host = '192.168.3.101:6060'
 // var host = '172.128.11.10:6060' // sugar
 
@@ -7,9 +7,9 @@ var image_host = 'thetacdn.meinvjpg.com'
 var img_url = 'http://' + image_host
 var coin_img_url = img_url
 
-// var host = 'theta.meinvjpg.com'
-// var base_url = 'https://' + host + '/api/2'
-var base_url = 'http://' + host + '/api/2'
+var host = 'theta.meinvjpg.com'
+var base_url = 'https://' + host + '/api/2'
+// var base_url = 'http://' + host + '/api/2'
 
 // old image path
 // var img_url = 'https://' + host + '/static/img'

@@ -1,5 +1,5 @@
 <view class="search-wrap">
-    <wxc-search class="search" align="center" bg-color="#fff" bind:input="onInput" show-clear="{{false}}"></wxc-search>
+    <wxc-search class="search" align="center" bg-color="#EFF4FB" icon-color="#9299A0" ph-color="#9299A0" bind:input="onInput" show-clear="{{false}}"></wxc-search>
 </view>
 
 <scroll-view scroll-y="true" lower-threshold="200" style="height:{{ winH }}px;" bindscrolltolower="loadMore" bindscrolltoupper="refesh">
@@ -7,10 +7,11 @@
     <view class="list-item">
       <block wx:for="{{currencies}}" wx:for-item="currency" wx:key="{{currency.id}}">
         <view class="list-check">
-          <view class="check-wrap" bindtap="onCheck" data-checked="{{ currency.isOptionalCurrency }}" data-symbol="{{ currency.symbol }}" data-currency="{{ currency }}">
-            <wxc-icon wx:if="{{currency.isOptionalCurrency}}" class="check" type="check" size="46" color="#ff5777"></wxc-icon>
+          <view class="check-star-wrap" bindtap="onCheck" data-checked="{{ currency.isOptionalCurrency }}" data-symbol="{{ currency.symbol }}" data-currency="{{ currency }}">
+             <wxc-icon wx:if="{{currency.isOptionalCurrency}}" class="check" type="star-active" size="36" color="#FFC200"></wxc-icon>
+             <wxc-icon wx:if="{{!currency.isOptionalCurrency}}" class="check" type="star" size="36" color="#93A1A9"></wxc-icon>
           </view>
-          <wxc-list class="item" title="{{ currency.symbol }} {{ currency.name }}" desc="{{ currencyUnit }}{{ currency.quotesPrice }}" mode="none"></wxc-list>
+          <wxc-list-star class="item" title="{{ currency.symbol }} {{ currency.name }}" desc="{{ currencyUnit }}{{ currency.quotesPrice }}" mode="" arrow="{{false}}"></wxc-list-star>
         </view>
       </block>
     </view>

@@ -1,7 +1,6 @@
 /**
  * Created by Lipeizhao on 2018/5/28.
  */
-
 // 导入组件
 var Api = require('../../utils/api.js');
 var Common = require('../../common/helper.js');
@@ -60,37 +59,42 @@ Page({
   },
   onShow: function () {
     if (this.data.initLock != true) {
-      // 清除所有数据
-      this.data.currencies = []
-      this.data.cursor = 0
-      this.data.hasMore = true
-      this.data.coinListLoading = false
+      if (app.globalData.currencyUnitRefreshed || app.globalData.myCurrencyRefreshed) {
+        app.globalData.currencyUnitRefreshed = false
+        app.globalData.myCurrencyRefreshed = false
+        
+        // 清除所有数据
+        this.data.currencies = []
+        this.data.cursor = 0
+        this.data.hasMore = true
+        this.data.coinListLoading = false
 
-      this.data.myCurrencies = []
-      this.data.myCursor = 0
-      this.data.myHasMore = true
-      this.data.myCoinListLoading = false
+        this.data.myCurrencies = []
+        this.data.myCursor = 0
+        this.data.myHasMore = true
+        this.data.myCoinListLoading = false
 
-      this.setData({
-        currencies: this.data.currencies,
-        myCurrencies: this.data.myCurrencies,
-      })
+        this.setData({
+          currencies: this.data.currencies,
+          myCurrencies: this.data.myCurrencies,
+        })
 
-      // 重新获取列表数据
-      this.getExchange()
+        // 重新获取列表数据
+        this.getExchange()
 
-      // 重新设置用户数据
-      if (app.globalData.userInfo) {
-        this.data.currencyUnit = app.globalData.userInfo.currencyUnit
-        this.data.labelCurrencyUnit = Common.getCurrencyUnitSymbol(this.data.currencyUnit)
-      } else {
-        this.data.currencyUnit = 'USD'
-        this.data.labelCurrencyUnit = Common.getCurrencyUnitSymbol(this.data.currencyUnit)
+        // 重新设置用户数据
+        if (app.globalData.userInfo) {
+          this.data.currencyUnit = app.globalData.userInfo.currencyUnit
+          this.data.labelCurrencyUnit = Common.getCurrencyUnitSymbol(this.data.currencyUnit)
+        } else {
+          this.data.currencyUnit = 'USD'
+          this.data.labelCurrencyUnit = Common.getCurrencyUnitSymbol(this.data.currencyUnit)
+        }
+        this.setData({
+          currencyUnit: this.data.currencyUnit,
+          labelCurrencyUnit: this.data.labelCurrencyUnit
+        })
       }
-      this.setData({
-        currencyUnit: this.data.currencyUnit,
-        labelCurrencyUnit: this.data.labelCurrencyUnit
-      })
     }
   },
   data: {
@@ -148,7 +152,7 @@ Page({
   },
   onShareAppMessage: function (res) {
     return {
-      title: '行情查询',
+      title: '价格列表',
       path: '/pages/index/index'
     }
   },
@@ -177,7 +181,7 @@ Page({
       this.data.tab = {
         list: [{
           id: '1',
-          title: wx.D ? '广州楼盘均价' : _('TabNumberOneName')
+          title: wx.D ? '广州地区楼均价' : _('TabNumberOneName')
         }, {
           id: '2',
           title: wx.D ? '': _('TabNumberTwoName')
@@ -191,9 +195,11 @@ Page({
       }
       this.data.labelMarketCap = wx.D ? '排序' : _('LabelMarketCap')
 
+      var labelCurrencyUnit = wx.D ? '' : '$'
       this.setData({
         tab: this.data.tab,
-        labelMarketCap: this.data.labelMarketCap
+        labelMarketCap: this.data.labelMarketCap,
+        labelCurrencyUnit: labelCurrencyUnit
       })
 
       // for mini, get data
@@ -207,16 +213,18 @@ Page({
       tabIndex: tabIndex,
     });
   },
-  // 获取货币列表数据
+  // 获取数据
   getData: function (countPerPage, cursor) {
     // for mini
     if (wx.D) {
       var that = this;
-      var api_url = Api.currency_url + '?sort=rank_asc&limit=' + countPerPage + '&start=' + cursor + '&d=1';
+      var api_url = Api.currency_url + '?sort=rank_asc&limit=' + countPerPage + '&start=' + cursor + '&currencyUnit=' + this.data.currencyUnit + '&d=1';
       Api.fetchGet(api_url, (err, res) => {
         //更新数据
         for (var i = 0; i < res.currencies.length; i++) {
           if (that.data.currencies.length <= that.data.coinListingLimit) {
+            // res.currencies[i].quotesMarketCap = '#' + (res.currencies[i].rank - 10000)
+            // res.currencies[i].quotesMarketCap = '#' + res.currencies[i].websiteSlug
             res.currencies[i].quotesMarketCap = ''
             res.currencies[i].rank = res.currencies[i].rank - 10000
             // res.currencies[i].quotesPercentChange24h = (res.currencies[i].quotesPercentChange24h * 100).toFixed(2)
@@ -263,11 +271,13 @@ Page({
           that.data.hasMore = false;
         }
 
+        var cItem = Common.getCurrencyUnitSymbol(app.globalData.userInfo.currencyUnit);
         // 更新页面模型
         that.setData({
           currencies: that.data.currencies,
           hasMore: that.data.hasMore,
-          percentageMark: '%'
+          percentageMark: '%',
+          labelCurrencyUnit: cItem
         });
 
         that.data.cursor = that.data.cursor + that.data.countPerPage;

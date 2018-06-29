@@ -11,6 +11,7 @@
   "dependencies": {
     "@minui/wxc-button": "^1.0.2",
     "@minui/wxc-cc": "^1.0.4",
+    "@minui/wxc-flex": "^1.0.6",
     "@minui/wxc-label": "^1.0.5",
     "@minui/wxc-list": "^1.0.1",
     "@minui/wxc-panel": "^1.0.1",

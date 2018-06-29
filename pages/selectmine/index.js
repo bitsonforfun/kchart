@@ -2,7 +2,7 @@
  * Created by Lipeizhao on 2018/6/20.
  */
 
-var _app = getApp()
+var app = getApp()
 var Api = require('../../utils/api.js');
 const _ = wx.T._
 
@@ -129,13 +129,8 @@ Page({
         var count = that.data.currencies.length;
         for (var i = 0; i < res.currencies.length; i++) {
           if (count < that.data.coinListingLimit) {
-            // that.addControlProperies(res.currencies[i])
             that.currencToLocalString(res.currencies[i])
             that.data.currencies.push(res.currencies[i])
-
-            // var currencyWrap = new Array();
-            // currencyWrap.push(res.currencies[i])
-            // that.data.currencies.push(currencyWrap)
             count += 1
           }
         }
@@ -176,7 +171,7 @@ Page({
     }
   },
   /**
-   * 用户选择和取消选择
+   * 用户选
    */
   onCheck: function (e) {
     var that = this;
@@ -185,6 +180,7 @@ Page({
     let currency = e.currentTarget.dataset.currency;
     let type = null;
 
+    app.globalData.myCurrencyRefreshed = true
     if (checked == true) {
       type = 'delete'
     } else if (checked == false) {
@@ -216,7 +212,7 @@ Page({
     })
   },
   /**
-   * 用户搜索
+   * 用户索
    */
   onInput: function (e) {
     var word = e.detail.value;
@@ -229,40 +225,5 @@ Page({
       currencies: [],
     });
     this.getData(this.data.countPerPage, this.data.cursor, word);
-    // var word = e.detail.value;
-    // var cursor = e.detail.cursor;
-    // var timeStamp = e.timeStamp;
-
-    // var that = this;
-    // var token = wx.getStorageSync('token');
-    // var api_url = Api.currency_url + '?sort=rank_asc&limit=' + countPerPage + '&start=' + cursor + '&searchWord=' + word + '&token=' + token;
-    // Api.fetchGet(api_url, (err, res) => {
-    //   if (res == 'Invalid token') {
-
-    //   } else {
-    //     var count = that.data.currencies.length;
-    //     for (var i = 0; i < res.currencies.length; i++) {
-    //       if (count < that.data.coinListingLimit) {
-    //         that.currencToLocalString(res.currencies[i])
-    //         that.data.currencies.push(res.currencies[i])
-    //         count += 1
-    //       }
-    //     }
-    //     if (that.data.currencies.length >= that.data.coinListingLimit) {
-    //       that.data.hasMore = false;
-    //     }
-    //   }
-
-    //   // 更新页面模型
-    //   that.setData({
-    //     currencies: that.data.currencies,
-    //     hasMore: that.data.hasMore,
-    //   });
-
-    //   that.data.cursor = that.data.cursor + that.data.countPerPage;
-
-    //   // 防止上拉页面后重复加载
-    //   this.data.coinListLoading = false
-    // })
   }
 })

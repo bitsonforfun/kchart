@@ -22,10 +22,14 @@ Page({
       quotesPrice: 0,
       quotesMarketCap: 0,
       quotesVolume24h: 0,
-      history: null
+      history: null,
+      volumeOfCountSuffix: '',
+      volumeSuffix: '',
     },
     label24Hour: _('Label24Hour'),
+    labelPercentChange: _('LabelPercentChange'),
     labelVolume: _('LabelVolume'),
+    labelVolume2: _('LabelVolume2'),
     labelCoinPair: _('LabelCoinPair'),
     labelStats: _('LabelStats'),
     labelRank: _('LabelRank'),
@@ -37,17 +41,23 @@ Page({
     ec: {
       lazyLoad: true
     },
-    changePercentColor: "#259D22",
+    isPercentUp: true,
     labelCurrencyUnit: '$',
-    currencyUnit: 'USD'
+    currencyUnit: 'USD',
+    D: true,
   },
   onShareAppMessage: function (res) {
     return {
-      title: '行情查询',
+      title: '价格列表',
       path: '/pages/basic/index?symbol=' + this.data.currencyInfo.symbol
     }
   },
   onLoad: function (options) {
+    this.data.coin_img_url = Api.coin_img_url
+    this.setData({
+      coin_img_url: this.data.coin_img_url
+    });
+
     if (Common.hasToken()) {
       this.data.currencyUnit = app.globalData.userInfo.currencyUnit
       this.data.labelCurrencyUnit = Common.getCurrencyUnitSymbol(this.data.currencyUnit)
@@ -57,7 +67,8 @@ Page({
     }
     this.setData({
       currencyUnit: this.data.currencyUnit,
-      labelCurrencyUnit: this.data.labelCurrencyUnit
+      labelCurrencyUnit: this.data.labelCurrencyUnit,
+      D: wx.D,
     })
     
     this.data.currencyInfo.symbol = options.symbol
@@ -222,7 +233,7 @@ Page({
 
     })
   },
-  // 获取货币数据
+  // 获取数据
   getBasicInfo: function (symbol) {
     if (wx.D) {
       var api_url = Api.currency_url + '/' + symbol
@@ -247,13 +258,9 @@ Page({
           symbol: this.data.currencyInfo.symbol
         }
         this.setData({
-          D: wx.D,
           labelCurrencyUnit: '￥',
-          // labelVolume: '成交量(1个月)',
           labelVolume: '',
-          labelCurrencyUnit: '',
           label24Hour: '1个月',
-          // label24Hour: '',
           exchange: exchange,
           exName: exName
         });
@@ -360,16 +367,27 @@ Page({
     currency.circulatingSupply = currency.circulatingSupply && currency.circulatingSupply.toLocaleString()
     currency.totalSupply = currency.totalSupply && currency.totalSupply.toLocaleString()
     currency.maxSupply = currency.maxSupply && currency.maxSupply.toLocaleString()
-    currency.quotesVolume24h = currency.quotesVolume24h && currency.quotesVolume24h.toLocaleString()
+
+    var obj = Common.numFormat(currency.quotesVolumeInCount24h);
+    currency.volumeInCountSuffix = obj.suffix
+    currency.quotesVolumeInCount24h = Number(obj.number)
+    currency.quotesVolumeInCount24h = currency.quotesVolumeInCount24h && Number(currency.quotesVolumeInCount24h.toFixed(1)).toLocaleString()
+    if (!currency.quotesVolumeInCount24h) {
+      currency.quotesVolumeInCount24h = '-'
+    }
+    var obj = Common.numFormat(currency.quotesVolume24h);
+    currency.volumeSuffix = obj.suffix
+    currency.quotesVolume24h = Number(obj.number)
+    currency.quotesVolume24h = currency.quotesVolume24h && Number(currency.quotesVolume24h.toFixed(1)).toLocaleString()
   },
   setChangePercentColor: function (currency) {
     if (currency.quotesPercentChange24h > 0) {
-      this.data.changePercentColor = '#259D22'
+      this.data.isPercentUp = true
     } else {
-      this.data.changePercentColor = '#DC143C'
+      this.data.isPercentUp = false
     }
     this.setData({
-      changePercentColor: this.data.changePercentColor
+      isPercentUp: this.data.isPercentUp
     })
   }
 })

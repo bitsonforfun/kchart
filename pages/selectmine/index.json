@@ -14,7 +14,7 @@
     "zan-button-group": "../../utils/dist/btn-group/index",
     "zan-field": "../../utils/dist/field/index",
     "zan-select": "../../utils/dist/select/index",
-    "wxc-list": "../../dist/packages/@minui/wxc-list/dist/index",
+    "wxc-list-star": "../../dist/packages/@minui/wxc-list-star/dist/index",
     "wxc-icon": "../../dist/packages/@minui/wxc-icon/dist/index",
     "wxc-search": "../../dist/packages/@minui/wxc-search/dist/index"
   }

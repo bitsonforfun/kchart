@@ -475,3 +475,175 @@ zan-panel__content::after{content:'';position:absolute;top:0;left:0;width:200%;h
     background: #d8d8d8;
   }
 /* wxc-list end */
+
+/* my image begin */
+.basic-img {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  right: 0px;
+  bottom: 0;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.basic-thumb {
+  width: 30rpx;
+  height: 30rpx;
+  position:relative;
+  margin-left: 30rpx;
+  margin-top: 36rpx;
+  margin-bottom: 34rpx;
+  overflow: hidden;
+  background-size: cover;
+}
+
+.basic-price {
+  line-height: 34rpx;
+  margin-top: 34rpx;
+  margin-bottom: 34rpx;
+  margin-left: 20rpx;
+  font-family: PingFangSC;
+  font-size: 48rpx
+}
+
+.label-trade-info {
+  font-family: PingFangSC;
+  font-size: 26rpx;
+  margin-bottom: 6rpx;
+  color: #a1abb3;
+}
+
+.text-trade-info {
+  font-family: PingFangSC;
+  font-size: 36rpx;
+}
+
+.green {
+  color: #00AD36;
+}
+
+.red {
+  color: #DC143C;
+}
+
+.text-trade-info-sub {
+  font-family: PingFangSC;
+  font-size: 18rpx;
+  color:#a1abb3;
+  margin-left:8rpx;
+  padding-top:16rpx
+}
+
+.cell-trade-info-one {
+  margin-top: 26rpx;
+  margin-bottom: 26rpx;
+  margin-left: 30rpx;
+}
+
+.cell-trade-info-two {
+  margin-top: 26rpx;
+  margin-bottom: 26rpx;
+  margin-left: 120rpx;
+}
+
+.cell-trade-info-three {
+  margin-top: 26rpx;
+  margin-bottom: 26rpx;
+  margin-left: 120rpx;
+}
+
+.basic-arrow {
+  width: 24rpx;
+  height: 24rpx;
+  position:relative;
+  margin-left: 10rpx; 
+  margin-top: 14rpx;
+  /* margin-right: auto; */
+  overflow: hidden;
+  background-size: cover;
+}
+
+.gap-gray-2 {
+  height: 2rpx;
+  background-color: #EFEFEF
+}
+
+.gap-gray-10 {
+  height: 10rpx;
+  background-color: #ECF5F8
+}
+
+.gap-white {
+  height: 2rpx;
+  background-color: #FFFFFF
+}
+
+.basic-icon {
+  width: 30rpx;
+  height: 30rpx;
+  position:relative;
+  margin-left: 30rpx;
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  background-size: cover;
+}
+
+.label-basic {
+  font-family: PingFangSC;
+  font-size: 26rpx;
+  margin-top: 16rpx;
+  margin-bottom: 20rpx;
+  margin-left: 16rpx;
+  color: #a1abb3;
+}
+
+.pair-left {
+  margin-left: 30rpx;
+  margin-top: 26rpx;
+  margin-bottom: 26rpx;
+}
+
+.pair-right {
+  margin-right: 30rpx;
+  margin-top: 26rpx;
+  margin-bottom: 26rpx;
+}
+
+.pair-left-top {
+  font-family: PingFangSC;
+  font-size: 32rpx;
+  line-height: 28rpx; 
+  margin-bottom: 22rpx;
+}
+
+.pair-left-bottom {
+  font-family: PingFangSC;
+  font-size: 26rpx;
+  line-height: 26rpx;
+  color: #a1abb3;
+}
+
+.pair-right-top {
+  font-family: PingFangSC;
+  font-size: 32rpx;
+  line-height: 32rpx; 
+  margin-bottom: 22rpx
+}
+
+.text-stat {
+  font-family: PingFangSC;
+  font-size: 32rpx;
+  line-height: 28rpx; 
+}
+
+.stat {
+  margin-top: 26rpx;
+  margin-bottom: 26rpx;
+  margin-left: 30rpx;
+  margin-right: 30rpx
+}
+/* my image end */
