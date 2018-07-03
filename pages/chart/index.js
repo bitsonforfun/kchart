@@ -152,10 +152,8 @@ Page({
     // 设置导航文字
     this.setNavigationBarTitleText()
 
-    // 获取k线粒度
     this.getSlice()
 
-    // 默认切换到15m钟线
     if (wx.D) {
       this.tabChart({
         target: {
@@ -360,7 +358,6 @@ Page({
     value = String(value);
     var reg = /^-?\d+\.?\d+$/;
     if (!reg.test(value)) {
-      // alert("请输入数字");
       return false;
     }
 
@@ -414,21 +411,15 @@ Page({
 
     this.setData({
       date: p.date,
-      // l: p.l?p.l:p.l.toFixed(2), // 低
-      // h: p.h ? p.h : p.h.toFixed(2), // 高 
-      // s: p.s ? p.s : p.s.toFixed(2), // 开
-      // c: p.c ? p.c : p.c.toFixed(2), // 收
-      // y: p.y ? p.y : p.y.toFixed(2), // 昨收
-
-      l: this.autoRoundNumPrecision(p.l), // 低
-      h: this.autoRoundNumPrecision(p.h), // 高 
-      s: this.autoRoundNumPrecision(p.s), // 开
-      c: this.autoRoundNumPrecision(p.c), // 收
-      y: this.autoRoundNumPrecision(p.y), // 昨收
-      v: v, // 量
-      e: p.e? p.e:'-', // 额
-      f: parseFloat((p.f * 100).toFixed(4)), // 震幅 取4位小数
-      ze: '-', // 震额
+      l: this.autoRoundNumPrecision(p.l),
+      h: this.autoRoundNumPrecision(p.h),
+      s: this.autoRoundNumPrecision(p.s),
+      c: this.autoRoundNumPrecision(p.c),
+      y: this.autoRoundNumPrecision(p.y),
+      v: v,
+      e: p.e? p.e:'-',
+      f: parseFloat((p.f * 100).toFixed(4)),
+      ze: '-',
       cColor: cColor
     });
   },
@@ -473,11 +464,6 @@ Page({
     if (this.data.isShowAxis) {
       this.data.isShowAxis = false;
     } else {
-      // var length = this.data.xEnd - this.data.xStart;
-      // kLine.tapMove1(length);
-      // kLineB.tapMove2(length);
-      // kLine.draw();
-      // kLineB.draw();
     }
   }
 });

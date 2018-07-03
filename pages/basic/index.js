@@ -112,30 +112,16 @@ Page({
         name: '价格',
         data: this.data.currencyInfo.history.close,
         format: function (val, name) {
-          return '$' + val.toFixed(2); 
+          return val.toFixed(2); 
         }
-        // format: function (val) {
-        //   return '价格: $' + val.toFixed(2) + '/n test'; 
-        //   // return val.toFixed(2) + '万';
-        // }
       }],
       yAxis: {
         disabled: true,
         gridColor: '#FFFFFF',
-        // title: '成交金额 (万元)',
-        // format: function (val) {
-        //   return val.toFixed(2);
-        // },
-        // min: 0,
-        // fontColor: '#8085e9',
-        // gridColor: '#8085e9',
-        // titleFontColor: '#f7a35c'
       },
       xAxis: {
         disableGrid: true,
         fontColor: '#FFFFFF'
-        // fontColor: '#7cb5ec',
-        // gridColor: '#2233ec'
       },
       extra: {
         lineStyle: 'curve',
@@ -209,7 +195,10 @@ Page({
     })
   },
   getCoinPairs: function () {
-    var api_url = Api.coinpair_url + '/' + this.data.currencyInfo.symbol
+    var api_url = Api.coinpair_url + '/' + this.data.currencyInfo.symbol;
+    if (this.data.currencyUnit) {
+      api_url = api_url + '?currencyUnit=' + this.data.currencyUnit
+    }
     Api.fetchGet(api_url, (err, res) => {
       //更新数据
       this.data.currencyInfo.coinpairs = res.spiders
@@ -219,6 +208,9 @@ Page({
 
         this.data.currencyInfo.coinpairs[i].quotesPrice = Common.autoRoundNumPrecision(this.data.currencyInfo.coinpairs[i].quotesPrice)
         this.data.currencyInfo.coinpairs[i].quotesPrice = Common.localeString(this.data.currencyInfo.coinpairs[i].quotesPrice)
+
+        this.data.currencyInfo.coinpairs[i].quotesPriceInCurrencyUnit = Common.autoRoundNumPrecision(this.data.currencyInfo.coinpairs[i].quotesPriceInCurrencyUnit)
+        this.data.currencyInfo.coinpairs[i].quotesPriceInCurrencyUnit = Common.localeString(this.data.currencyInfo.coinpairs[i].quotesPriceInCurrencyUnit)
       }
 
       if (res.spiders.length == 0) {
@@ -240,7 +232,7 @@ Page({
       Api.fetchGet(api_url, (err, res) => {
         res.rank = res.rank - 10000
         res.quotesPercentChange24h = (res.quotesPercentChange24h * 100).toFixed(2)
-        res.quotesVolume24h = ''
+        // res.quotesVolume24h = ''
         this.currencyToLocalString(res)
         this.setChangePercentColor(res)
         this.data.currencyInfo = res
@@ -284,34 +276,14 @@ Page({
   },
   setOption: function(chart, currencyInfo) {
     const option = {
-      // timeline: {
-      //   data: [
-      //     '1小时', '24小时', '7天', '1月', '3月', '6月', '1年'
-      //   ],
-      //   // label: {
-      //   //   formatter: function (s) {
-      //   //     return s.slice(0, 4);
-      //   //   }
-      //   // },
-      //   // autoPlay: true,
-      //   // playInterval: 1000
-      // },
       backgroundColor: "",
       // color: ["#e7f3fe"],
       color: ["#4EABD9", "#67E0E3", "#9FE6B8"],
       title: {
-        // text: this.data.currencyInfo.name + ' Charts',
-        // subtext: 'Price ()'
-        // subtext: currencyInfo.name
       },
       tooltip: {
         trigger: 'axis'
       },
-      // dataZoom: {
-      //   show: false,
-      //   type: 'inside',
-      //   start: 70
-      // },
       xAxis: {
         type: 'category',
         boundaryGap: true,
@@ -334,24 +306,7 @@ Page({
         smooth: true,
         symbol: 'none',
         data: currencyInfo.history.close,
-        // itemStyle: {
-        //   normal: {
-        //     lineStyle: {
-        //       color: '#0084ff',
-        //       width: 1.5
-        //     }
-        //   }
-        // },
         areaStyle: {
-          // normal: {
-          //   color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-          //     offset: 0,
-          //     color: '#e7f3fe'
-          //   }, {
-          //     offset: 1,
-          //     color: 'rgba(0,0,0,0)'
-          //   }]),
-          // }
         }
       }],
     };
@@ -368,17 +323,20 @@ Page({
     currency.totalSupply = currency.totalSupply && currency.totalSupply.toLocaleString()
     currency.maxSupply = currency.maxSupply && currency.maxSupply.toLocaleString()
 
-    var obj = Common.numFormat(currency.quotesVolumeInCount24h);
-    currency.volumeInCountSuffix = obj.suffix
-    currency.quotesVolumeInCount24h = Number(obj.number)
-    currency.quotesVolumeInCount24h = currency.quotesVolumeInCount24h && Number(currency.quotesVolumeInCount24h.toFixed(1)).toLocaleString()
-    if (!currency.quotesVolumeInCount24h) {
+    if (currency.quotesVolumeInCount24h) {
+      var fixNum = Number(currency.quotesVolumeInCount24h.toFixed(0));
+      var obj = Common.numFormat(fixNum);
+      currency.volumeInCountSuffix = obj.suffix
+      currency.quotesVolumeInCount24h = obj.number
+    }
+    else {
       currency.quotesVolumeInCount24h = '-'
     }
-    var obj = Common.numFormat(currency.quotesVolume24h);
+    var fixNum = Number(currency.quotesVolume24h.toFixed(0));
+    var obj = Common.numFormat(fixNum);
     currency.volumeSuffix = obj.suffix
-    currency.quotesVolume24h = Number(obj.number)
-    currency.quotesVolume24h = currency.quotesVolume24h && Number(currency.quotesVolume24h.toFixed(1)).toLocaleString()
+    currency.quotesVolume24h = obj.number
+    // currency.quotesVolume24h = currency.quotesVolume24h && Number(currency.quotesVolume24h.toFixed(1)).toLocaleString()
   },
   setChangePercentColor: function (currency) {
     if (currency.quotesPercentChange24h > 0) {

@@ -13,6 +13,7 @@
 
     "wxc-list": "../../dist/packages/@minui/wxc-list/dist/index",
     "wxc-icon": "../../dist/packages/@minui/wxc-icon/dist/index",
-    "wxc-button": "../../dist/packages/@minui/wxc-button/dist/index"
+    "wxc-button": "../../dist/packages/@minui/wxc-button/dist/index",
+    "wxc-flex": "../../dist/packages/@minui/wxc-flex/dist/index"
   }
 }

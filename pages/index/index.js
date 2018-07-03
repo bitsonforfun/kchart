@@ -10,12 +10,6 @@ const app = getApp();
 const _ = wx.T._
 
 Page({
-  /*
-   * 小程序启动时的执行顺序有可能是app初始化后执行首页的onLoad（以下称onLoad），
-   * 也有可能在app初始化完之前执行onLoad，假如在app初始化完之前执行onLoad，则
-   * 将onLoad里的首页初始化逻辑作为回调函数传给app最后回调，假如在app初始化完后执行
-   * onLoad，则按照正常逻辑在onLoad里执行首页初始化逻辑
-   */
   onLoad: function () {
     app.userInfoReadyCallback = () => {
       this.pageInit()
@@ -79,10 +73,10 @@ Page({
           myCurrencies: this.data.myCurrencies,
         })
 
-        // 重新获取列表数据
+        // 重新获取数据
         this.getExchange()
 
-        // 重新设置用户数据
+        // 重新设置数据
         if (app.globalData.userInfo) {
           this.data.currencyUnit = app.globalData.userInfo.currencyUnit
           this.data.labelCurrencyUnit = Common.getCurrencyUnitSymbol(this.data.currencyUnit)
@@ -271,7 +265,11 @@ Page({
           that.data.hasMore = false;
         }
 
-        var cItem = Common.getCurrencyUnitSymbol(app.globalData.userInfo.currencyUnit);
+        var cItem = '$'
+        if (app.globalData.userInfo) {
+          cItem = Common.getCurrencyUnitSymbol(app.globalData.userInfo.currencyUnit);
+        }
+        
         // 更新页面模型
         that.setData({
           currencies: that.data.currencies,
@@ -289,8 +287,6 @@ Page({
   },
   getMyData: function (countPerPage, cursor) {
     var that = this;
-    
-    // 若token不为空，则获取用户自选股列表，否则则提示用户登录
     if (Common.hasToken()) {
       var token = wx.getStorageSync("token");
       var api_url = Api.currency_url + '?sort=rank_asc&limit=' + countPerPage + '&start=' + cursor + '&onlyOptionalCurrency=true&currencyUnit=' + this.data.currencyUnit + '&token=' + token;
@@ -321,19 +317,16 @@ Page({
           // 防止上拉页面后重复加载
           this.data.coinListLoading = false
 
-          // 显示自选
           this.setData({
             hasLogin: true
           });
         } else {
-          // 隐藏自选
           this.setData({
             hasLogin: false
           });
         }
       })
     } else {
-      // 隐藏自选
       this.setData({
         hasLogin: false
       });

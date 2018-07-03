@@ -1,7 +1,46 @@
 <view class="mine-wrapper">
   <view class="avatar-wrapper">
-    <view>
-      <view class="avatar">
+    <block wx:if="{{ userInfoLocal.avatarUrl }}">
+      <view style="width: 100%">
+        <image style="width: 100%;" src="../../static/img/mine_after.png"></image>
+      </view>
+    </block>
+    <block wx:else>
+      <view style="width: 100%">
+        <image style="width: 100%;" src="../../static/img/mine_before.png"></image>
+      </view>
+    </block>
+    
+    <view class="avatar" style="width: 100%;position:absolute;top: 74rpx;">
+      <image style="width: 244rpx; height: 244rpx" src="../../static/img/avatar_border_default.png"></image>
+    </view>
+    <block wx:if="{{ userInfoLocal.avatarUrl }}">
+      <view class="avatar" style="width: 100%;position:absolute;top: 126rpx;">
+        <image style="border-radius:50%;" src="{{userInfoLocal.avatarUrl}}"></image>
+      </view>
+    </block>
+    <!-- <view class="avatar" style="width: 100%;position:absolute;top: 126rpx;">
+      <image style="border-radius:50%;" src="{{userInfoLocal.avatarUrl ? userInfoLocal.avatarUrl:'../../static/img/default.png'}}"></image>
+    </view> -->
+
+    <view style="width: 100%;position:absolute;top: 126rpx;">
+      <!-- <view class="avatar" style="">
+        <image style="width: 160rpx; height: 160rpx" src="../../static/img/avatar_border.png"></image>
+      </view>
+      <view class="avatar" style="">
+        <image style="border-radius:50%;" src="{{userInfoLocal.avatarUrl ? userInfoLocal.avatarUrl:'../../static/img/default.png'}}"></image>
+      </view> -->
+      <view class="text" style="margin-top: 180rpx">
+        <text wx:if="{{userInfoLocal.nickName}}">{{userInfoLocal.nickName}}</text>
+        <view class="button-small-wrap">
+          <wxc-button wx:if="{{ !userInfoLocal.nickName }}" plain="true" open-type="getUserInfo" bindgetuserinfo="toLogin" type="disabled" btnStyle="width: 130rpx; height: 70rpx;border-radius: 66rpx;color: #fff;border: 0px;">点击登录
+          </wxc-button>
+        </view>
+      </view>
+    </view>
+    
+    <view style="position:absolute;top: 120rpx;left: 40%">
+      <!-- <view class="avatar" style="">
         <image style="border-radius:50%;" src="{{userInfoLocal.avatarUrl ? userInfoLocal.avatarUrl:'../../static/img/default.png'}}"></image>
       </view>
       <view class="text">
@@ -10,9 +49,19 @@
           <wxc-button wx:if="{{ !userInfoLocal.nickName }}" plain="true" open-type="getUserInfo" bindgetuserinfo="toLogin" type="disabled" btnStyle="width: 130rpx; height: 70rpx;border-radius: 66rpx;color: #fff;border: 0px;">点击登录
           </wxc-button>
         </view>
-
-      </view>
+      </view> -->
     </view>
+    <!-- <view class="avatar" style="position:absolute;top: 10rpx">
+      <image style="border-radius:50%;" src="{{userInfoLocal.avatarUrl ? userInfoLocal.avatarUrl:'../../static/img/default.png'}}"></image>
+    </view> -->
+
+    <!-- <view class="text">
+      <text wx:if="{{userInfoLocal.nickName}}">{{userInfoLocal.nickName}}</text>
+      <view class="button-small-wrap">
+        <wxc-button wx:if="{{ !userInfoLocal.nickName }}" plain="true" open-type="getUserInfo" bindgetuserinfo="toLogin" type="disabled" btnStyle="width: 130rpx; height: 70rpx;border-radius: 66rpx;color: #fff;border: 0px;">点击登录
+        </wxc-button>
+      </view>
+    </view> -->
   </view>
 
   <view class="list-wrap">

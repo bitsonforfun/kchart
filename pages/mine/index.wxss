@@ -1,8 +1,8 @@
 .avatar-wrapper {
   /* background: #1b82d1; */
   /* background: linear-gradient(to bottom, rgb(3,150,255), rgb(171,200,255)); */
-  background: linear-gradient(to bottom, rgb(22,151,154), rgb(48,212,148));
-  padding: 25px 0;
+  /* background: linear-gradient(to bottom, rgb(22,151,154), rgb(48,212,148)); */
+  /* padding: 25px 0; */
 }
 
 .avatar-wrapper .avatar {
@@ -11,8 +11,8 @@
 }
 
 .avatar-wrapper .avatar image {
-  width: 75px;
-  height: 75px;
+  width: 150rpx;
+  height: 150rpx;
 }
 
 .avatar-wrapper .text {
